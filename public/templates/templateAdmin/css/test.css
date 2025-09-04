@@ -1,0 +1,1222 @@
+/**TEST 1 ********** Template CSS **********/
+:root {
+    --primary: #007BFF; /* Bleu au lieu de rouge */
+    --secondary: #191C24;
+    --light: #6C7293;
+    --dark: #000000;
+}
+
+.back-to-top {
+    position: fixed;
+    display: none;
+    right: 45px;
+    bottom: 45px;
+    z-index: 99;
+}
+
+
+/*** Spinner ***/
+#spinner {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .5s ease-out, visibility 0s linear .5s;
+    z-index: 99999;
+}
+
+#spinner.show {
+    transition: opacity .5s ease-out, visibility 0s linear 0s;
+    visibility: visible;
+    opacity: 1;
+}
+
+
+/*** Button ***/
+.btn {
+    transition: .5s;
+}
+
+.btn-square {
+    width: 38px;
+    height: 38px;
+}
+
+.btn-sm-square {
+    width: 32px;
+    height: 32px;
+}
+
+.btn-lg-square {
+    width: 48px;
+    height: 48px;
+}
+
+.btn-square,
+.btn-sm-square,
+.btn-lg-square {
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: normal;
+    border-radius: 50px;
+}
+
+
+/*** Layout ***/
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 250px;
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--secondary);
+    transition: 0.5s;
+    z-index: 999;
+}
+
+.content {
+    margin-left: 250px;
+    min-height: 100vh;
+    background: var(--dark);
+    transition: 0.5s;
+}
+
+@media (min-width: 992px) {
+    .sidebar {
+        margin-left: 0;
+    }
+
+    .sidebar.open {
+        margin-left: -250px;
+    }
+
+    .content {
+        width: calc(100% - 250px);
+    }
+
+    .content.open {
+        width: 100%;
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .sidebar {
+        margin-left: -250px;
+    }
+
+    .sidebar.open {
+        margin-left: 0;
+    }
+
+    .content {
+        width: 100%;
+        margin-left: 0;
+    }
+}
+
+
+/*** Navbar ***/
+.sidebar .navbar .navbar-nav .nav-link {
+    padding: 7px 20px;
+    color: var(--light);
+    font-weight: 500;
+    border-left: 3px solid var(--secondary);
+    border-radius: 0 30px 30px 0;
+    outline: none;
+}
+
+.sidebar .navbar .navbar-nav .nav-link:hover,
+.sidebar .navbar .navbar-nav .nav-link.active {
+    color: var(--primary); /* Bleu au lieu de rouge */
+    background: var(--dark);
+    border-color: var(--primary); /* Bleu au lieu de rouge */
+}
+
+.sidebar .navbar .navbar-nav .nav-link i {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--dark);
+    border-radius: 40px;
+}
+
+.sidebar .navbar .navbar-nav .nav-link:hover i,
+.sidebar .navbar .navbar-nav .nav-link.active i {
+    background: var(--secondary);
+}
+
+.sidebar .navbar .dropdown-toggle::after {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    border: none;
+    content: "\f107";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    transition: .5s;
+}
+
+.sidebar .navbar .dropdown-toggle[aria-expanded=true]::after {
+    transform: rotate(-180deg);
+}
+
+.sidebar .navbar .dropdown-item {
+    padding-left: 25px;
+    border-radius: 0 30px 30px 0;
+    color: var(--light);
+}
+
+.sidebar .navbar .dropdown-item:hover,
+.sidebar .navbar .dropdown-item.active {
+    background: var(--dark);
+}
+
+.content .navbar .navbar-nav .nav-link {
+    margin-left: 25px;
+    padding: 12px 0;
+    color: var(--light);
+    outline: none;
+}
+
+.content .navbar .navbar-nav .nav-link:hover,
+.content .navbar .navbar-nav .nav-link.active {
+    color: var(--primary); /* Bleu au lieu de rouge */
+}
+
+.content .navbar .sidebar-toggler,
+.content .navbar .navbar-nav .nav-link i {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--dark);
+    border-radius: 40px;
+}
+
+.content .navbar .dropdown-item {
+    color: var(--light);
+}
+
+.content .navbar .dropdown-item:hover,
+.content .navbar .dropdown-item.active {
+    background: var(--dark);
+}
+
+.content .navbar .dropdown-toggle::after {
+    margin-left: 6px;
+    vertical-align: middle;
+    border: none;
+    content: "\f107";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    transition: .5s;
+}
+
+.content .navbar .dropdown-toggle[aria-expanded=true]::after {
+    transform: rotate(-180deg);
+}
+
+@media (max-width: 575.98px) {
+    .content .navbar .navbar-nav .nav-link {
+        margin-left: 15px;
+    }
+}
+
+
+/*** Date Picker ***/
+.bootstrap-datetimepicker-widget.bottom {
+    top: auto !important;
+}
+
+.bootstrap-datetimepicker-widget .table * {
+    border-bottom-width: 0px;
+}
+
+.bootstrap-datetimepicker-widget .table th {
+    font-weight: 500;
+}
+
+.bootstrap-datetimepicker-widget.dropdown-menu {
+    padding: 10px;
+    border-radius: 2px;
+}
+
+.bootstrap-datetimepicker-widget table td.active,
+.bootstrap-datetimepicker-widget table td.active:hover {
+    background: var(--primary); /* Bleu au lieu de rouge */
+}
+
+.bootstrap-datetimepicker-widget table td.today::before {
+    border-bottom-color: var(--primary); /* Bleu au lieu de rouge */
+}
+
+
+/*** Progress Bar ***/
+.progress .progress-bar {
+    width: 0px;
+    transition: 2s;
+}
+
+
+/*** Testimonial ***/
+.testimonial-carousel .owl-dots {
+    margin-top: 24px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.testimonial-carousel .owl-dot {
+    position: relative;
+    display: inline-block;
+    margin: 0 5px;
+    width: 15px;
+    height: 15px;
+    border: 5px solid var(--primary); /* Bleu au lieu de rouge */
+    border-radius: 15px;
+    transition: .5s;
+}
+
+.testimonial-carousel .owl-dot.active {
+    background: var(--dark);
+    border-color: var(--primary); /* Bleu au lieu de rouge */
+}
+
+/* app.css */
+.iti__container {
+    width: 100%;
+    max-width: 100%;
+}
+
+.iti__flag-container {
+    top: 0;
+}
+
+.iti__country-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Classes utilitaires pour le thème bleu */
+.text-primary {
+    color: var(--primary) !important; /* Bleu au lieu de rouge */
+}
+
+.bg-primary {
+    background-color: var(--primary) !important; /* Bleu au lieu de rouge */
+}
+
+.border-primary {
+    border-color: var(--primary) !important; /* Bleu au lieu de rouge */
+}
+
+.btn-primary {
+    background-color: var(--primary); /* Bleu au lieu de rouge */
+    border-color: var(--primary); /* Bleu au lieu de rouge */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Bleu plus foncé au hover */
+    border-color: #0056b3;
+}
+
+.btn-outline-primary {
+    color: var(--primary); /* Bleu au lieu de rouge */
+    border-color: var(--primary); /* Bleu au lieu de rouge */
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary); /* Bleu au lieu de rouge */
+    border-color: var(--primary); /* Bleu au lieu de rouge */
+}
+
+/* Liens avec couleur primaire */
+a {
+    color: var(--primary); /* Bleu au lieu de rouge */
+}
+
+a:hover {
+    color: #0056b3; /* Bleu plus foncé au hover */
+}
+
+/* Autres éléments qui pourraient utiliser la couleur primaire */
+.badge-primary {
+    background-color: var(--primary) !important; /* Bleu au lieu de rouge */
+}
+
+.alert-primary {
+    color: #004085;
+    background-color: #cce7ff;
+    border-color: #b3d9ff;
+}
+
+/* Spinner avec couleur primaire */
+.spinner-border-primary {
+    color: var(--primary) !important; /* Bleu au lieu de rouge */
+}
+
+/* Focus states avec couleur primaire */
+.form-control:focus {
+    border-color: var(--primary); /* Bleu au lieu de rouge */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.form-check-input:checked {
+    background-color: var(--primary); /* Bleu au lieu de rouge */
+    border-color: var(--primary); /* Bleu au lieu de rouge */
+}
+
+
+
+
+
+
+
+
+
+
+/*******Test 2
+    /********** Template CSS **********/
+    :root {
+        --primary: #007BFF; /* Bleu au lieu de rouge */
+        --secondary: #191C24;
+        --light: #6C7293;
+        --dark: #000000;
+    }
+
+    .back-to-top {
+        position: fixed;
+        display: none;
+        right: 45px;
+        bottom: 45px;
+        z-index: 99;
+    }
+
+
+    /*** Spinner ***/
+    #spinner {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity .5s ease-out, visibility 0s linear .5s;
+        z-index: 99999;
+    }
+
+    #spinner.show {
+        transition: opacity .5s ease-out, visibility 0s linear 0s;
+        visibility: visible;
+        opacity: 1;
+    }
+
+
+    /*** Button ***/
+    .btn {
+        transition: .5s;
+    }
+
+    .btn-square {
+        width: 38px;
+        height: 38px;
+    }
+
+    .btn-sm-square {
+        width: 32px;
+        height: 32px;
+    }
+
+    .btn-lg-square {
+        width: 48px;
+        height: 48px;
+    }
+
+    .btn-square,
+    .btn-sm-square,
+    .btn-lg-square {
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: normal;
+        border-radius: 50px;
+    }
+
+
+    /*** Layout ***/
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 250px;
+        height: 100vh;
+        overflow-y: auto;
+        background: var(--secondary);
+        transition: 0.5s;
+        z-index: 999;
+    }
+
+    .content {
+        margin-left: 250px;
+        min-height: 100vh;
+        background: var(--dark);
+        transition: 0.5s;
+    }
+
+    @media (min-width: 992px) {
+        .sidebar {
+            margin-left: 0;
+        }
+
+        .sidebar.open {
+            margin-left: -250px;
+        }
+
+        .content {
+            width: calc(100% - 250px);
+        }
+
+        .content.open {
+            width: 100%;
+            margin-left: 0;
+        }
+    }
+
+    @media (max-width: 991.98px) {
+        .sidebar {
+            margin-left: -250px;
+        }
+
+        .sidebar.open {
+            margin-left: 0;
+        }
+
+        .content {
+            width: 100%;
+            margin-left: 0;
+        }
+    }
+
+
+    /*** Navbar ***/
+    .sidebar .navbar .navbar-nav .nav-link {
+        padding: 7px 20px;
+        color: var(--light);
+        font-weight: 500;
+        border-left: 3px solid var(--secondary);
+        border-radius: 0 30px 30px 0;
+        outline: none;
+    }
+
+    .sidebar .navbar .navbar-nav .nav-link:hover,
+    .sidebar .navbar .navbar-nav .nav-link.active {
+        color: var(--primary); /* Bleu au lieu de rouge */
+        background: var(--dark);
+        border-color: var(--primary); /* Bleu au lieu de rouge */
+    }
+
+    .sidebar .navbar .navbar-nav .nav-link i {
+        width: 40px;
+        height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--dark);
+        border-radius: 40px;
+    }
+
+    .sidebar .navbar .navbar-nav .nav-link:hover i,
+    .sidebar .navbar .navbar-nav .nav-link.active i {
+        background: var(--secondary);
+    }
+
+    .sidebar .navbar .dropdown-toggle::after {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        border: none;
+        content: "\f107";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        transition: .5s;
+    }
+
+    .sidebar .navbar .dropdown-toggle[aria-expanded=true]::after {
+        transform: rotate(-180deg);
+    }
+
+    .sidebar .navbar .dropdown-item {
+        padding-left: 25px;
+        border-radius: 0 30px 30px 0;
+        color: var(--light);
+    }
+
+    .sidebar .navbar .dropdown-item:hover,
+    .sidebar .navbar .dropdown-item.active {
+        background: var(--dark);
+    }
+
+    .content .navbar .navbar-nav .nav-link {
+        margin-left: 25px;
+        padding: 12px 0;
+        color: var(--light);
+        outline: none;
+    }
+
+    .content .navbar .navbar-nav .nav-link:hover,
+    .content .navbar .navbar-nav .nav-link.active {
+        color: var(--primary); /* Bleu au lieu de rouge */
+    }
+
+    .content .navbar .sidebar-toggler,
+    .content .navbar .navbar-nav .nav-link i {
+        width: 40px;
+        height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--dark);
+        border-radius: 40px;
+    }
+
+    .content .navbar .dropdown-item {
+        color: var(--light);
+    }
+
+    .content .navbar .dropdown-item:hover,
+    .content .navbar .dropdown-item.active {
+        background: var(--dark);
+    }
+
+    .content .navbar .dropdown-toggle::after {
+        margin-left: 6px;
+        vertical-align: middle;
+        border: none;
+        content: "\f107";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        transition: .5s;
+    }
+
+    .content .navbar .dropdown-toggle[aria-expanded=true]::after {
+        transform: rotate(-180deg);
+    }
+
+    @media (max-width: 575.98px) {
+        .content .navbar .navbar-nav .nav-link {
+            margin-left: 15px;
+        }
+    }
+
+
+    /*** Date Picker ***/
+    .bootstrap-datetimepicker-widget.bottom {
+        top: auto !important;
+    }
+
+    .bootstrap-datetimepicker-widget .table * {
+        border-bottom-width: 0px;
+    }
+
+    .bootstrap-datetimepicker-widget .table th {
+        font-weight: 500;
+    }
+
+    .bootstrap-datetimepicker-widget.dropdown-menu {
+        padding: 10px;
+        border-radius: 2px;
+    }
+
+    .bootstrap-datetimepicker-widget table td.active,
+    .bootstrap-datetimepicker-widget table td.active:hover {
+        background: var(--primary); /* Bleu au lieu de rouge */
+    }
+
+    .bootstrap-datetimepicker-widget table td.today::before {
+        border-bottom-color: var(--primary); /* Bleu au lieu de rouge */
+    }
+
+
+    /*** Progress Bar ***/
+    .progress .progress-bar {
+        width: 0px;
+        transition: 2s;
+    }
+
+
+    /*** Testimonial ***/
+    .testimonial-carousel .owl-dots {
+        margin-top: 24px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+    }
+
+    .testimonial-carousel .owl-dot {
+        position: relative;
+        display: inline-block;
+        margin: 0 5px;
+        width: 15px;
+        height: 15px;
+        border: 5px solid var(--primary); /* Bleu au lieu de rouge */
+        border-radius: 15px;
+        transition: .5s;
+    }
+
+    .testimonial-carousel .owl-dot.active {
+        background: var(--dark);
+        border-color: var(--primary); /* Bleu au lieu de rouge */
+    }
+
+    /* app.css */
+    .iti__container {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .iti__flag-container {
+        top: 0;
+    }
+
+    .iti__country-list {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    /* Classes utilitaires pour le thème bleu */
+    .text-primary {
+        color: var(--primary) !important; /* Bleu au lieu de rouge */
+    }
+
+    .bg-primary {
+        background-color: var(--primary) !important; /* Bleu au lieu de rouge */
+    }
+
+    .border-primary {
+        border-color: var(--primary) !important; /* Bleu au lieu de rouge */
+    }
+
+    .btn-primary {
+        background-color: var(--primary); /* Bleu au lieu de rouge */
+        border-color: var(--primary); /* Bleu au lieu de rouge */
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3; /* Bleu plus foncé au hover */
+        border-color: #0056b3;
+    }
+
+    .btn-outline-primary {
+        color: var(--primary); /* Bleu au lieu de rouge */
+        border-color: var(--primary); /* Bleu au lieu de rouge */
+    }
+
+    .btn-outline-primary:hover {
+        background-color: var(--primary); /* Bleu au lieu de rouge */
+        border-color: var(--primary); /* Bleu au lieu de rouge */
+    }
+
+    /* Liens avec couleur primaire */
+    a {
+        color: var(--primary); /* Bleu au lieu de rouge */
+    }
+
+    a:hover {
+        color: #0056b3; /* Bleu plus foncé au hover */
+    }
+
+    /* Autres éléments qui pourraient utiliser la couleur primaire */
+    .badge-primary {
+        background-color: var(--primary) !important; /* Bleu au lieu de rouge */
+    }
+
+    .alert-primary {
+        color: #004085;
+        background-color: #cce7ff;
+        border-color: #b3d9ff;
+    }
+
+    /* Spinner avec couleur primaire */
+    .spinner-border-primary {
+        color: var(--primary) !important; /* Bleu au lieu de rouge */
+    }
+
+    /* Focus states avec couleur primaire */
+    .form-control:focus {
+        border-color: var(--primary); /* Bleu au lieu de rouge */
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .form-check-input:checked {
+        background-color: var(--primary); /* Bleu au lieu de rouge */
+        border-color: var(--primary); /* Bleu au lieu de rouge */
+    }
+/**Fin test 2
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*****TEST 3 Blanc
+    /********** Template CSS **********/
+    :root {
+        --primary: #1d3c78; /* Bleu foncé au lieu de bleu clair */
+        --secondary: #ffffff; /* Blanc au lieu de gris */
+        --light: #333333; /* Noir pas trop foncé au lieu de gris */
+        --dark: rgba(29, 60, 120, 0.1); /* Bleu transparent clair au lieu de noir */
+    }
+
+    .back-to-top {
+        position: fixed;
+        display: none;
+        right: 45px;
+        bottom: 45px;
+        z-index: 99;
+    }
+
+
+    /*** Spinner ***/
+    #spinner {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity .5s ease-out, visibility 0s linear .5s;
+        z-index: 99999;
+    }
+
+    #spinner.show {
+        transition: opacity .5s ease-out, visibility 0s linear 0s;
+        visibility: visible;
+        opacity: 1;
+    }
+
+
+    /*** Button ***/
+    .btn {
+        transition: .5s;
+    }
+
+    .btn-square {
+        width: 38px;
+        height: 38px;
+    }
+
+    .btn-sm-square {
+        width: 32px;
+        height: 32px;
+    }
+
+    .btn-lg-square {
+        width: 48px;
+        height: 48px;
+    }
+
+    .btn-square,
+    .btn-sm-square,
+    .btn-lg-square {
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: normal;
+        border-radius: 50px;
+    }
+
+
+    /*** Layout ***/
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 250px;
+        height: 100vh;
+        overflow-y: auto;
+        background: var(--secondary); /* Blanc */
+        transition: 0.5s;
+        z-index: 999;
+        border-right: 1px solid rgba(29, 60, 120, 0.1);
+    }
+
+    .content {
+        margin-left: 250px;
+        min-height: 100vh;
+        background: var(--dark); /* Bleu transparent clair */
+        transition: 0.5s;
+    }
+
+    @media (min-width: 992px) {
+        .sidebar {
+            margin-left: 0;
+        }
+
+        .sidebar.open {
+            margin-left: -250px;
+        }
+
+        .content {
+            width: calc(100% - 250px);
+        }
+
+        .content.open {
+            width: 100%;
+            margin-left: 0;
+        }
+    }
+
+    @media (max-width: 991.98px) {
+        .sidebar {
+            margin-left: -250px;
+        }
+
+        .sidebar.open {
+            margin-left: 0;
+        }
+
+        .content {
+            width: 100%;
+            margin-left: 0;
+        }
+    }
+
+
+    /*** Navbar ***/
+    .sidebar .navbar .navbar-nav .nav-link {
+        padding: 7px 20px;
+        color: var(--light); /* Noir pas trop foncé */
+        font-weight: 500;
+        border-left: 3px solid var(--secondary);
+        border-radius: 0 30px 30px 0;
+        outline: none;
+    }
+
+    .sidebar .navbar .navbar-nav .nav-link:hover,
+    .sidebar .navbar .navbar-nav .nav-link.active {
+        color: var(--primary); /* Bleu foncé */
+        background: var(--dark); /* Bleu transparent */
+        border-color: var(--primary); /* Bleu foncé */
+    }
+
+    .sidebar .navbar .navbar-nav .nav-link i {
+        width: 40px;
+        height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--dark); /* Bleu transparent */
+        border-radius: 40px;
+    }
+
+    .sidebar .navbar .navbar-nav .nav-link:hover i,
+    .sidebar .navbar .navbar-nav .nav-link.active i {
+        background: var(--secondary); /* Blanc */
+    }
+
+    .sidebar .navbar .dropdown-toggle::after {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        border: none;
+        content: "\f107";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        transition: .5s;
+    }
+
+    .sidebar .navbar .dropdown-toggle[aria-expanded=true]::after {
+        transform: rotate(-180deg);
+    }
+
+    .sidebar .navbar .dropdown-item {
+        padding-left: 25px;
+        border-radius: 0 30px 30px 0;
+        color: var(--light); /* Noir pas trop foncé */
+    }
+
+    .sidebar .navbar .dropdown-item:hover,
+    .sidebar .navbar .dropdown-item.active {
+        background: var(--dark); /* Bleu transparent */
+    }
+
+    .content .navbar .navbar-nav .nav-link {
+        margin-left: 25px;
+        padding: 12px 0;
+        color: var(--light); /* Noir pas trop foncé */
+        outline: none;
+    }
+
+    .content .navbar .navbar-nav .nav-link:hover,
+    .content .navbar .navbar-nav .nav-link.active {
+        color: var(--primary); /* Bleu foncé */
+    }
+
+    .content .navbar .sidebar-toggler,
+    .content .navbar .navbar-nav .nav-link i {
+        width: 40px;
+        height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--dark); /* Bleu transparent */
+        border-radius: 40px;
+    }
+
+    .content .navbar .dropdown-item {
+        color: var(--light); /* Noir pas trop foncé */
+    }
+
+    .content .navbar .dropdown-item:hover,
+    .content .navbar .dropdown-item.active {
+        background: var(--dark); /* Bleu transparent */
+    }
+
+    .content .navbar .dropdown-toggle::after {
+        margin-left: 6px;
+        vertical-align: middle;
+        border: none;
+        content: "\f107";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        transition: .5s;
+    }
+
+    .content .navbar .dropdown-toggle[aria-expanded=true]::after {
+        transform: rotate(-180deg);
+    }
+
+    @media (max-width: 575.98px) {
+        .content .navbar .navbar-nav .nav-link {
+            margin-left: 15px;
+        }
+    }
+
+
+    /*** Date Picker ***/
+    .bootstrap-datetimepicker-widget.bottom {
+        top: auto !important;
+    }
+
+    .bootstrap-datetimepicker-widget .table * {
+        border-bottom-width: 0px;
+    }
+
+    .bootstrap-datetimepicker-widget .table th {
+        font-weight: 500;
+    }
+
+    .bootstrap-datetimepicker-widget.dropdown-menu {
+        padding: 10px;
+        border-radius: 2px;
+    }
+
+    .bootstrap-datetimepicker-widget table td.active,
+    .bootstrap-datetimepicker-widget table td.active:hover {
+        background: var(--primary); /* Bleu foncé */
+    }
+
+    .bootstrap-datetimepicker-widget table td.today::before {
+        border-bottom-color: var(--primary); /* Bleu foncé */
+    }
+
+
+    /*** Progress Bar ***/
+    .progress .progress-bar {
+        width: 0px;
+        transition: 2s;
+    }
+
+
+    /*** Testimonial ***/
+    .testimonial-carousel .owl-dots {
+        margin-top: 24px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+    }
+
+    .testimonial-carousel .owl-dot {
+        position: relative;
+        display: inline-block;
+        margin: 0 5px;
+        width: 15px;
+        height: 15px;
+        border: 5px solid var(--primary); /* Bleu foncé */
+        border-radius: 15px;
+        transition: .5s;
+    }
+
+    .testimonial-carousel .owl-dot.active {
+        background: var(--dark); /* Bleu transparent */
+        border-color: var(--primary); /* Bleu foncé */
+    }
+
+    /* app.css */
+    .iti__container {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .iti__flag-container {
+        top: 0;
+    }
+
+    .iti__country-list {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    /* Classes utilitaires pour le nouveau thème */
+    .text-primary {
+        color: var(--primary) !important; /* Bleu foncé */
+    }
+
+    .bg-primary {
+        background-color: var(--primary) !important; /* Bleu foncé */
+    }
+
+    .border-primary {
+        border-color: var(--primary) !important; /* Bleu foncé */
+    }
+
+    .btn-primary {
+        background-color: var(--primary); /* Bleu foncé */
+        border-color: var(--primary); /* Bleu foncé */
+        color: #ffffff;
+    }
+
+    .btn-primary:hover {
+        background-color: #152f63; /* Bleu encore plus foncé au hover */
+        border-color: #152f63;
+        color: #ffffff;
+    }
+
+    .btn-outline-primary {
+        color: var(--primary); /* Bleu foncé */
+        border-color: var(--primary); /* Bleu foncé */
+    }
+
+    .btn-outline-primary:hover {
+        background-color: var(--primary); /* Bleu foncé */
+        border-color: var(--primary); /* Bleu foncé */
+        color: #ffffff;
+    }
+
+    /* Liens avec couleur primaire */
+    a {
+        color: var(--primary); /* Bleu foncé */
+    }
+
+    a:hover {
+        color: #152f63; /* Bleu encore plus foncé au hover */
+    }
+
+    /* Autres éléments qui pourraient utiliser la couleur primaire */
+    .badge-primary {
+        background-color: var(--primary) !important; /* Bleu foncé */
+    }
+
+    .alert-primary {
+        color: #152f63;
+        background-color: rgba(29, 60, 120, 0.1);
+        border-color: rgba(29, 60, 120, 0.2);
+    }
+
+    /* Spinner avec couleur primaire */
+    .spinner-border-primary {
+        color: var(--primary) !important; /* Bleu foncé */
+    }
+
+    /* Focus states avec couleur primaire */
+    .form-control:focus {
+        border-color: var(--primary); /* Bleu foncé */
+        box-shadow: 0 0 0 0.2rem rgba(29, 60, 120, 0.25);
+    }
+
+    .form-check-input:checked {
+        background-color: var(--primary); /* Bleu foncé */
+        border-color: var(--primary); /* Bleu foncé */
+    }
+
+    /* Ajustements pour les textes et fonds */
+    body {
+        color: var(--light); /* Noir pas trop foncé */
+        background-color: #ffffff;
+    }
+
+    /* Texte blanc devient noir */
+    .text-white {
+        color: #333333 !important;
+    }
+
+    /* Texte gris devient noir pas trop foncé */
+    .text-muted {
+        color: var(--light) !important;
+    }
+
+    .text-light {
+        color: var(--light) !important;
+    }
+
+    /* Fond noir devient bleu transparent */
+    .bg-dark {
+        background-color: var(--dark) !important;
+    }
+
+    /* Fond gris devient blanc */
+    .bg-light {
+        background-color: #ffffff !important;
+    }
+
+    .bg-secondary {
+        background-color: var(--secondary) !important;
+    }
+
+    /* Cards et composants */
+    .card {
+        background-color: #ffffff;
+        border: 1px solid rgba(29, 60, 120, 0.1);
+        color: var(--light);
+    }
+
+    .card-header {
+        background-color: var(--dark);
+        color: var(--light);
+    }
+
+    .table {
+        color: var(--light);
+    }
+
+    .table th {
+        background-color: var(--dark);
+        color: var(--light);
+        border-color: rgba(29, 60, 120, 0.1);
+    }
+
+    /* Dropdown menus */
+    .dropdown-menu {
+        background-color: #ffffff;
+        border: 1px solid rgba(29, 60, 120, 0.1);
+    }
+
+    .dropdown-item {
+        color: var(--light) !important;
+    }
+
+    .dropdown-item:hover {
+        background-color: var(--dark);
+        color: var(--primary) !important;
+    }
+
+/**Fon test 3
