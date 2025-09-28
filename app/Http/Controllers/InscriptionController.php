@@ -49,7 +49,6 @@ class InscriptionController extends Controller
         }
     }
 
-
     public function index(Request $request)
     {
         $statut = $request->get('statut');
@@ -78,7 +77,6 @@ class InscriptionController extends Controller
 
         return view('pages.admin.inscription.liste', compact('inscriptions', 'statut', 'notifications'));
     }
-
 
     public function valider($id)
     {
@@ -153,6 +151,29 @@ class InscriptionController extends Controller
         }
     }
 
+    public function storeByAdmin(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'date' => 'required|date',
+            'classe_id' => 'required|exists:classes,id',
+            'programme_accademique_id' => 'required|exists:programme_accademiques,id',
+        ]);
+
+        try {
+            $inscription = new Inscription();
+            $inscription->date = $request->date;
+            $inscription->statut = 'Encours';
+            $inscription->classe_id = $request->classe_id;
+            $inscription->programme_accademique_id = $request->programme_accademique_id;
+            $inscription->user_id = $request->user_id; // ✅ on prend l'étudiant sélectionné
+            $inscription->save();
+
+            return redirect()->back()->with('success', 'Inscription enregistrée avec succès pour cet étudiant.');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', "Erreur lors de l'inscription : " . $e->getMessage());
+        }
+    }
 
         /**
      * Update the specified resource in storage.
@@ -228,17 +249,53 @@ class InscriptionController extends Controller
     {
         $user = Auth::user();
         /** @var \App\Models\User $user */
+
+        $programmeActif = ProgrammeAccademique::where('etat', true)->first();
+
+        if (!$programmeActif) {
+            return redirect()->route('dashboard')->with('error', 'Aucun programme académique actif. Veuillez contacter l’administration.');
+        }
+
+        // Vérifier inscription en cours
         $inscriptionEnCours = $user->inscriptions()
             ->where('statut', 'Encours')
             ->latest()
             ->first();
 
+        // Vérifier la dernière inscription validée
+        $derniereInscriptionValidee = $user->inscriptions()
+            ->where('statut', 'Valider')
+            ->latest()
+            ->first();
+
+        $resteAPayer = 0;
+        if ($derniereInscriptionValidee) {
+            $classe = $derniereInscriptionValidee->classe;
+
+            $frais_inscription = $classe->prix_inscription;
+            $mensualite = $classe->prix_mensuel;
+            $duree = $classe->duree;
+
+            // Montant total attendu
+            $total_a_payer = $frais_inscription + $mensualite * ($duree - 1);
+
+            // Déjà payé
+            $total_paye = $derniereInscriptionValidee->paiements()->sum('montant');
+
+            // Montant restant
+            $resteAPayer = max(0, $total_a_payer - $total_paye);
+        }
+
         $formations = Formation::all();
         $programmeActif = ProgrammeAccademique::where('etat', true)->first();
 
-        return view('pages.admin.inscription.welcome', compact('formations', 'programmeActif', 'inscriptionEnCours'));
+        return view('pages.admin.inscription.welcome', compact(
+            'formations',
+            'programmeActif',
+            'inscriptionEnCours',
+            'resteAPayer'
+        ));
     }
-
 
     public function edit($id)
     {

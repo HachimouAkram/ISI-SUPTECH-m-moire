@@ -16,6 +16,13 @@
         </div>
         <!-- Spinner End -->
 
+        <!-- Bouton Retour -->
+        <div class="position-absolute top-0 start-0 m-3">
+            <a href="{{ route('programme.index') }}" class="btn btn-light shadow-sm">
+                <i class="fa fa-arrow-left"></i>
+            </a>
+        </div>
+
         <!-- Create Programme Académique Start -->
         <div class="container-fluid">
             <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
@@ -42,7 +49,7 @@
                             </div>
                         @endif
 
-                        <form method="POST" action="{{ route('programme_academique.store') }}">
+                        <form method="POST" action="{{ route('programme.store') }}">
                             @csrf
 
                             <!-- Année Académique -->

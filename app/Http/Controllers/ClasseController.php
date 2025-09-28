@@ -19,6 +19,8 @@ class ClasseController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
+
+    
     public function index()
     {
         // Ordre personnalisé des types de formation
@@ -95,8 +97,6 @@ class ClasseController extends Controller
         }
     }
 
-
-
         /**
      * Update the specified resource in storage.
      *
@@ -121,7 +121,6 @@ class ClasseController extends Controller
         }
     }
 
-
         /**
      * Remove the specified resource from storage.
      *
@@ -139,7 +138,6 @@ class ClasseController extends Controller
             return back()->with('error', 'Suppression échouée : ' . $e->getMessage());
         }
     }
-
 
         /**
      * Display the specified resource.

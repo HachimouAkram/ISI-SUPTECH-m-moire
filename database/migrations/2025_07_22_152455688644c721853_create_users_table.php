@@ -11,17 +11,19 @@ return new class extends Migration
         // Table des utilisateurs
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->boolean('etat')->default(true);
             $table->string('nom', 100);
             $table->string('prenom', 100);
             $table->string('email')->unique();
-            $table->enum('role', ['admin', 'formateur', 'etudiant'])->default('etudiant');
+            $table->enum('role', ['admin', 'etudiant'])->default('etudiant');
             $table->string('telephone', 20);
             $table->enum('sexe', ['Homme', 'Femme', 'Autre']);
             $table->date('date_naissance');
             $table->string('password');
+            $table->enum('fonction', ['Directeur', 'Secretaire', 'tresorier'])->nullable();
             $table->string('photo')->nullable();
             $table->boolean('must_change_password')->default(true);
-            $table->rememberToken(); // <= AJOUT ICI
+            $table->rememberToken();
             $table->timestamps();
         });
 

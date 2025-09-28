@@ -1,105 +1,88 @@
-<section>
-    <header class="mb-4">
-        <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Informations personnelles') }}
-        </h2>
+<form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data">
+    @csrf
+    @method('patch')
 
-        <p class="mt-1 text-sm text-gray-600">
-            {{ __("Mettez à jour les informations de votre compte.") }}
-        </p>
-    </header>
+    <!-- Nom -->
+    <div class="form-floating mb-3">
+        <input id="nom" type="text" name="nom" value="{{ old('nom', $user->nom) }}"
+               class="form-control @error('nom') is-invalid @enderror" placeholder="Nom" required autofocus>
+        <label for="nom">Nom</label>
+        @error('nom')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
 
-    <!-- Formulaire mise à jour -->
-    <form method="post" action="{{ route('profile.update') }}" class="space-y-4" enctype="multipart/form-data">
-        @csrf
-        @method('patch')
+    <!-- Prénom -->
+    <div class="form-floating mb-3">
+        <input id="prenom" type="text" name="prenom" value="{{ old('prenom', $user->prenom) }}"
+               class="form-control @error('prenom') is-invalid @enderror" placeholder="Prénom" required>
+        <label for="prenom">Prénom</label>
+        @error('prenom')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <!-- Email -->
+    <div class="form-floating mb-3">
+        <input id="email" type="email" name="email" value="{{ old('email', $user->email) }}"
+               class="form-control @error('email') is-invalid @enderror" placeholder="Email" required>
+        <label for="email">Adresse Email</label>
+        @error('email')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
 
-            <div>
-                <x-input-label for="prenom" :value="__('Prénom')" />
-                <x-text-input id="prenom" name="prenom" type="text" class="mt-1 block w-full"
-                              :value="old('prenom', $user->prenom)" required autofocus />
-                <x-input-error class="mt-1" :messages="$errors->get('prenom')" />
-            </div>
+    <!-- Téléphone -->
+    <div class="form-floating mb-3">
+        <input id="telephone" type="tel" name="telephone" value="{{ old('telephone', $user->telephone) }}"
+               class="form-control @error('telephone') is-invalid @enderror" placeholder="Téléphone" required>
+        <label for="telephone">Téléphone</label>
+        @error('telephone')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
 
-            <div>
-                <x-input-label for="nom" :value="__('Nom')" />
-                <x-text-input id="nom" name="nom" type="text" class="mt-1 block w-full"
-                              :value="old('nom', $user->nom)" required />
-                <x-input-error class="mt-1" :messages="$errors->get('nom')" />
-            </div>
+    <!-- Sexe -->
+    <div class="mb-3">
+        <select id="sexe" name="sexe" class="form-select @error('sexe') is-invalid @enderror" required>
+            <option value="" disabled {{ old('sexe', $user->sexe) ? '' : 'selected' }}>Sexe</option>
+            <option value="Homme" {{ old('sexe', $user->sexe) == 'Homme' ? 'selected' : '' }}>Masculin</option>
+            <option value="Femme" {{ old('sexe', $user->sexe) == 'Femme' ? 'selected' : '' }}>Féminin</option>
+            <option value="Autre" {{ old('sexe', $user->sexe) == 'Autre' ? 'selected' : '' }}>Autre</option>
+        </select>
+        @error('sexe')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
 
-            <div class="sm:col-span-2">
-                <x-input-label for="email" :value="__('Email')" />
-                <x-text-input id="email" name="email" type="email" class="mt-1 block w-full"
-                              :value="old('email', $user->email)" required />
-                <x-input-error class="mt-1" :messages="$errors->get('email')" />
+    <!-- Date de naissance -->
+    <div class="form-floating mb-3">
+        <input id="date_naissance" type="date" name="date_naissance"
+               value="{{ old('date_naissance', $user->date_naissance) }}"
+               class="form-control @error('date_naissance') is-invalid @enderror" placeholder="Date de naissance" required>
+        <label for="date_naissance">Date de naissance</label>
+        @error('date_naissance')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
 
-                @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
-                    <p class="text-sm mt-2 text-gray-800">
-                        {{ __('Votre adresse email n\'est pas vérifiée.') }}
-                        <button form="send-verification" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            {{ __('Cliquez ici pour renvoyer l\'email de vérification.') }}
-                        </button>
-                    </p>
-
-                    @if (session('status') === 'verification-link-sent')
-                        <p class="mt-2 font-medium text-sm text-green-600">
-                            {{ __('Un nouvel email de vérification a été envoyé.') }}
-                        </p>
-                    @endif
-                @endif
-            </div>
-
-            <div>
-                <x-input-label for="telephone" :value="__('Téléphone')" />
-                <x-text-input id="telephone" name="telephone" type="text" class="mt-1 block w-full"
-                              :value="old('telephone', $user->telephone)" required />
-                <x-input-error class="mt-1" :messages="$errors->get('telephone')" />
-            </div>
-
-            <div>
-                <x-input-label for="sexe" :value="__('Sexe')" />
-                <select id="sexe" name="sexe" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
-                    <option value="Homme" {{ old('sexe', $user->sexe) === 'Homme' ? 'selected' : '' }}>Homme</option>
-                    <option value="Femme" {{ old('sexe', $user->sexe) === 'Femme' ? 'selected' : '' }}>Femme</option>
-                    <option value="Autre" {{ old('sexe', $user->sexe) === 'Autre' ? 'selected' : '' }}>Autre</option>
-                </select>
-                <x-input-error class="mt-1" :messages="$errors->get('sexe')" />
-            </div>
-
-            <div>
-                <x-input-label for="date_naissance" :value="__('Date de naissance')" />
-                <x-text-input id="date_naissance" name="date_naissance" type="date" class="mt-1 block w-full"
-                              :value="old('date_naissance', $user->date_naissance)" required />
-                <x-input-error class="mt-1" :messages="$errors->get('date_naissance')" />
-            </div>
-
-            <div>
-                <x-input-label for="photo" :value="__('Photo de profil')" />
-                <input type="file" name="photo" id="photoInput" accept="image/*" class="mt-1 block w-full">
-                <div class="mt-2">
-                    <img id="photoPreview" style="max-width: 100%; display: none;">
-                </div>
-                <input type="hidden" name="photo" id="photoCropped">
-                <x-input-error class="mt-1" :messages="$errors->get('photo')" />
-            </div>
-
+    <!-- Photo -->
+    <div class="mb-3">
+        <label for="photoInput" class="form-label">Photo de profil</label>
+        <input type="file" name="photo" id="photoInput" accept="image/*" class="form-control">
+        <div class="mt-2">
+            <img id="photoPreview" style="max-width: 100%; display: none;">
         </div>
+        <input type="hidden" name="photo" id="photoCropped">
+        @error('photo')
+            <div class="invalid-feedback d-block">{{ $message }}</div>
+        @enderror
+    </div>
 
-        <div class="flex items-center gap-4 mt-4">
-            <x-primary-button>{{ __('Enregistrer') }}</x-primary-button>
-            @if (session('status') === 'profile-updated')
-                <p x-data="{ show: true }" x-show="show" x-transition
-                   x-init="setTimeout(() => show = false, 2000)"
-                   class="text-sm text-gray-600">{{ __('Enregistré.') }}</p>
-            @endif
-        </div>
-    </form>
-</section>
-<!-- Ajouter Cropper.js -->
-<!-- Cropper.js CSS et JS -->
+    <button type="submit" class="btn btn-primary w-100 py-2">Enregistrer</button>
+</form>
+
+<!-- Cropper.js -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
@@ -138,7 +121,6 @@ form.addEventListener('submit', function(e) {
             const dt = new DataTransfer();
             dt.items.add(file);
             photoInput.files = dt.files;
-
             form.submit();
         }, 'image/png');
     }

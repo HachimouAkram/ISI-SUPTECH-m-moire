@@ -34,20 +34,20 @@
                         <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modalDetails{{ $inscription->id }}" title="Voir">
                             <i class="bi bi-eye"></i>
                         </button>
-
-                        <!-- Bouton Valider -->
-                        <form action="{{ route('inscriptions.valider', $inscription->id) }}" method="POST" class="d-inline">
-                            @csrf
-                            @method('PATCH')
-                            <button class="btn btn-sm btn-success" title="Valider">
-                                <i class="bi bi-check-circle"></i>
+                        @if(Auth::user()->fonction === 'Secretaire' || Auth::user()->fonction === 'Directeur')
+                            <!-- Bouton Valider -->
+                            <form action="{{ route('inscriptions.valider', $inscription->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('PATCH')
+                                <button class="btn btn-sm btn-success" title="Valider">
+                                    <i class="bi bi-check-circle"></i>
+                                </button>
+                            </form>
+                            <!-- Bouton Refuser -->
+                            <button type="button" class="btn btn-sm btn-danger" title="Refuser" data-bs-toggle="modal" data-bs-target="#refuserModal{{ $inscription->id }}">
+                                <i class="bi bi-x-circle"></i>
                             </button>
-                        </form>
-                        <!-- Bouton Refuser -->
-                        <button type="button" class="btn btn-sm btn-danger" title="Refuser" data-bs-toggle="modal" data-bs-target="#refuserModal{{ $inscription->id }}">
-                            <i class="bi bi-x-circle"></i>
-                        </button>
-
+                        @endif
                         <!-- Modale -->
                         <div class="modal fade" id="refuserModal{{ $inscription->id }}" tabindex="-1" aria-hidden="true">
                             <div class="modal-dialog">

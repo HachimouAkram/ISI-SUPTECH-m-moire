@@ -58,6 +58,7 @@
                         </div>
 
                         <!-- Supprimer le compte -->
+                        {{--
                         <div class="mb-4 p-3 bg-white rounded shadow-sm">
                             <h5 class="mb-3 text-danger">Supprimer le compte</h5>
 
@@ -107,6 +108,7 @@
                                 </form>
                             </x-modal>
                         </div>
+                        --}}
 
                     </div>
                 </div>

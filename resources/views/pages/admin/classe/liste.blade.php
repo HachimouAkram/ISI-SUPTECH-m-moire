@@ -27,9 +27,11 @@
                 <div class="col-12">
                     <div class="bg-secondary rounded h-100 p-4">
                         <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h6 class="mb-0">Liste des Classes</h6>
-                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                            <h6 class="mb-0"><i class="fas fa-school me-2"></i>Liste des Classes</h6>
+                            @if(Auth::user()->fonction === 'Secretaire' || Auth::user()->fonction === 'Directeur')
+                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#addModal">➕ Ajouter</button>
+                            @endif
                         </div>
 
                         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -55,7 +57,9 @@
                                     <th>Filière</th>
                                     <th>Prix (Inscription & Mensuel)</th>
                                     <th>Durée</th>
-                                    <th class="text-center">Actions</th>
+                                    @if(Auth::user()->fonction === 'Secretaire' || Auth::user()->fonction === 'Directeur')
+                                        <th class="text-center">Actions</th>
+                                    @endif
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -86,24 +90,28 @@
                                             </span>
                                         </td>
                                         <td>{{ $classe->duree }} Mois</td>
-                                        <td class="text-center d-flex justify-content-center gap-2">
-                                            <button class="btn btn-sm btn-outline-warning"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#editModal{{ $classe->id }}"
-                                                    title="Modifier">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </button>
-
-                                            <form method="POST" action="{{ route('classes.destroy', $classe) }}">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button class="btn btn-sm btn-outline-danger"
-                                                        onclick="return confirm('Voulez-vous vraiment supprimer cette classe ?')"
-                                                        title="Supprimer">
-                                                    <i class="bi bi-trash3"></i>
+                                        @if(Auth::user()->fonction === 'Secretaire' || Auth::user()->fonction === 'Directeur')
+                                            <td class="text-center d-flex justify-content-center gap-2">
+                                                @can('modifier_classes')
+                                                <button class="btn btn-sm btn-outline-warning"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#editModal{{ $classe->id }}"
+                                                        title="Modifier">
+                                                    <i class="bi bi-pencil-square"></i>
                                                 </button>
-                                            </form>
-                                        </td>
+                                                @endcan
+
+                                                <form method="POST" action="{{ route('classes.destroy', $classe) }}">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="btn btn-sm btn-outline-danger"
+                                                            onclick="return confirm('Voulez-vous vraiment supprimer cette classe ?')"
+                                                            title="Supprimer">
+                                                        <i class="bi bi-trash3"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        @endif
                                     </tr>
 
                                     <!-- Modal Modifier -->

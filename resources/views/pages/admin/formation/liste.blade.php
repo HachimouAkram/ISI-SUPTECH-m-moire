@@ -26,8 +26,10 @@
                         <div class="col-12">
                             <div class="bg-secondary rounded h-100 p-4">
                                 <div class="d-flex justify-content-between align-items-center mb-4">
-                                    <h6 class="mb-0">Liste des Formations</h6>
-                                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">➕ Ajouter</button>
+                                    <h6 class="mb-0"><i class="fas fa-graduation-cap me-2"></i>Liste des Formations</h6>
+                                    @if(Auth::user()->fonction === 'Secretaire' || Auth::user()->fonction === 'Directeur')
+                                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">➕ Ajouter</button>
+                                    @endif
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <div>
@@ -52,7 +54,9 @@
                                                 <th>Niveau</th>
                                                 <th>Durée</th>
                                                 <th>Département</th>
-                                                <th class="text-center">Actions</th>
+                                                @if(Auth::user()->fonction === 'Secretaire' || Auth::user()->fonction === 'Directeur')
+                                                    <th class="text-center">Actions</th>
+                                                @endif
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -74,25 +78,27 @@
                                                     <td>{{ $formation->type_formation }}</td>
                                                     <td>{{ $formation->duree }}</td>
                                                     <td>{{ $formation->domaine }}</td>
-                                                    <td class="text-center d-flex justify-content-center gap-2">
-                                                        <!-- Bouton Modifier -->
-                                                        <button class="btn btn-sm btn-outline-warning"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#editModal{{ $formation->id }}"
-                                                                title="Modifier">
-                                                            <i class="bi bi-pencil-square"></i>
-                                                        </button>
-                                                        <!-- Bouton Supprimer -->
-                                                        <form method="POST" action="{{ route('formations.destroy', $formation) }}">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button class="btn btn-sm btn-outline-danger"
-                                                                    onclick="return confirm('Supprimer cette formation ?')"
-                                                                    title="Supprimer">
-                                                                <i class="bi bi-trash3"></i>
+                                                    @if(Auth::user()->fonction === 'Secretaire' || Auth::user()->fonction === 'Directeur')
+                                                        <td class="text-center d-flex justify-content-center gap-2">
+                                                            <!-- Bouton Modifier -->
+                                                            <button class="btn btn-sm btn-outline-warning"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#editModal{{ $formation->id }}"
+                                                                    title="Modifier">
+                                                                <i class="bi bi-pencil-square"></i>
                                                             </button>
-                                                        </form>
-                                                    </td>
+                                                            <!-- Bouton Supprimer -->
+                                                            <form method="POST" action="{{ route('formations.destroy', $formation) }}">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button class="btn btn-sm btn-outline-danger"
+                                                                        onclick="return confirm('Supprimer cette formation ?')"
+                                                                        title="Supprimer">
+                                                                    <i class="bi bi-trash3"></i>
+                                                                </button>
+                                                            </form>
+                                                        </td>
+                                                    @endif
                                                 </tr>
                                                 <!-- Modal Modifier -->
                                                 <div class="modal fade" id="editModal{{ $formation->id }}" tabindex="-1" aria-hidden="true">

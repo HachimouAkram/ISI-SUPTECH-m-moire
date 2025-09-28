@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->decimal('montant', 10, 2);
             $table->date('date');
-            $table->enum('mode_paiement', ['Espèces', 'Carte', 'Virement', 'Mobile']);
+            $table->string('mode_paiement');
             $table->enum('type_paiement', ['Inscription', 'Mensualité']);
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('inscription_id')->constrained()->onDelete('cascade');

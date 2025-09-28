@@ -74,8 +74,8 @@
                                 <select id="sexe" name="sexe" required
                                     class="form-select @error('sexe') is-invalid @enderror">
                                     <option value="" disabled {{ old('sexe') ? '' : 'selected' }}>Sexe</option>
-                                    <option value="Homme" {{ old('sexe') == 'Homme' ? 'selected' : '' }}>Homme</option>
-                                    <option value="Femme" {{ old('sexe') == 'Femme' ? 'selected' : '' }}>Femme</option>
+                                    <option value="Homme" {{ old('sexe') == 'Homme' ? 'selected' : '' }}>Masculin</option>
+                                    <option value="Femme" {{ old('sexe') == 'Femme' ? 'selected' : '' }}>Féminin</option>
                                     <option value="Autre" {{ old('sexe') == 'Autre' ? 'selected' : '' }}>Autre</option>
                                 </select>
                                 @error('sexe')
@@ -94,20 +94,43 @@
                             </div>
 
                             <!-- Password -->
-                            <div class="form-floating mb-3">
-                                <input id="password" type="password" name="password" required
-                                    class="form-control @error('password') is-invalid @enderror" placeholder="Mot de passe">
-                                <label for="password">Mot de passe</label>
+                            <div class="form-floating mb-3 position-relative">
+                                <input type="password"
+                                    class="form-control @error('password') is-invalid @enderror"
+                                    id="floatingPassword"
+                                    name="password"
+                                    required
+                                    autocomplete="new-password"
+                                    placeholder="Mot de passe">
+                                <label for="floatingPassword">Mot de passe</label>
+
+                                <!-- Bouton œil -->
+                                <span class="position-absolute top-50 end-0 translate-middle-y me-3" style="cursor: pointer;" onclick="togglePassword('floatingPassword','togglePasswordIcon')">
+                                    <i class="fas fa-eye" id="togglePasswordIcon"></i>
+                                </span>
+
                                 @error('password')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <span class="invalid-feedback d-block" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
                                 @enderror
                             </div>
 
                             <!-- Confirm Password -->
-                            <div class="form-floating mb-4">
-                                <input id="password_confirmation" type="password" name="password_confirmation" required
-                                    class="form-control" placeholder="Confirmer le mot de passe">
-                                <label for="password_confirmation">Confirmer le mot de passe</label>
+                            <div class="form-floating mb-4 position-relative">
+                                <input type="password"
+                                    class="form-control"
+                                    id="floatingPasswordConfirm"
+                                    name="password_confirmation"
+                                    required
+                                    autocomplete="new-password"
+                                    placeholder="Confirmer le mot de passe">
+                                <label for="floatingPasswordConfirm">Confirmer le mot de passe</label>
+
+                                <!-- Bouton œil -->
+                                <span class="position-absolute top-50 end-0 translate-middle-y me-3" style="cursor: pointer;" onclick="togglePassword('floatingPasswordConfirm','togglePasswordConfirmIcon')">
+                                    <i class="fas fa-eye" id="togglePasswordConfirmIcon"></i>
+                                </span>
                             </div>
 
                             <button type="submit" class="btn btn-primary py-3 w-100 mb-4">S'inscrire</button>
@@ -127,5 +150,19 @@
     <!-- JavaScript Libraries -->
     @include('sections.admin.script')
 </body>
-
+<script>
+function togglePassword(inputId, iconId) {
+    const passwordInput = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+</script>
 </html>

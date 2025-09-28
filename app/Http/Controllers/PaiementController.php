@@ -281,7 +281,7 @@ class PaiementController extends Controller
         }
     }
 
-    // --- STRIPE (déjà fonctionnel) ---
+    // --- STRIPE ---
     public function createStripePaiement($type)
     {
         /** @var User $user */
@@ -420,21 +420,152 @@ class PaiementController extends Controller
             ->with('error', 'Paiement Stripe annulé.');
     }
 
-
-    public function index()
+    public function payerEspeceUnique(Request $request, User $user)
     {
-        $perPage = request()->get('per_page', 10);
-        $paiements = Paiement::paginate($perPage);
+        // Vérifier si l'étudiant a une inscription validée
+        $inscription = $user->inscriptions()->where('statut', 'Valider')->latest()->first();
 
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
-        $inscription = $user->inscriptions()->latest()->first();
-        $formation = $inscription ? $inscription->classe : null;
-        $montant = $inscription ? $inscription->paiements()->sum('montant') : 0;
+        if (!$inscription) {
+            return back()->with('error', '⚠️ Cet étudiant n’a aucune inscription validée.');
+        }
 
-        return view('pages.admin.paiement.liste', compact('paiements', 'formation', 'montant'));
+        $classe = $inscription->classe;
+        $frais_inscription = $classe->prix_inscription;
+        $mensualite = $classe->prix_mensuel;
+        $duree = $classe->duree;
+        $mois_debut_nom = $classe->mois_rentree;
+        $annee = $inscription->created_at->year;
+
+        // Total payé
+        $total_paye = $inscription->paiements()->sum('montant');
+
+        // Montant restant à payer
+        $montant_restant = max(0, $frais_inscription + $mensualite * ($duree - 1) - $total_paye);
+
+        if ($montant_restant <= 0) {
+            return back()->with('error', '✅ Toutes les échéances ont déjà été réglées pour cet étudiant.');
+        }
+
+        // Déterminer le type de paiement
+        $inscriptionPayee = $inscription->paiements()->where('type_paiement', 'Inscription')->exists();
+        $typePaiement = $inscriptionPayee ? 'Mensualité' : 'Inscription';
+        $montant = $typePaiement === 'Inscription' ? $frais_inscription : $mensualite;
+
+        // Créer le paiement
+        $paiement = Paiement::create([
+            'montant' => $montant,
+            'date' => now(),
+            'mode_paiement' => 'Espèce',
+            'type_paiement' => $typePaiement,
+            'user_id' => $user->id,
+            'inscription_id' => $inscription->id,
+        ]);
+
+        // 🔹 Enregistrer le log
+        activity()
+            ->causedBy(Auth::user())      // l’admin ou secrétaire qui enregistre
+            ->performedOn($paiement)      // le paiement qui vient d’être créé
+            ->withProperties([
+                'montant' => $paiement->montant,
+                'mode' => $paiement->mode_paiement,
+                'type' => $paiement->type_paiement,
+                'etudiant' => $user->nom . ' ' . $user->prenom,
+            ])
+            ->log("Paiement en espèces enregistré pour {$user->nom} {$user->prenom}");
+
+        // Générer le PDF du reçu
+        $pdf = Pdf::loadView('pages.admin.recu.pdf.recu', [
+            'paiement' => $paiement,
+            'user' => $user,
+        ]);
+
+        $fileName = 'recu_' . $paiement->id . '.pdf';
+        Storage::put('public/documents/' . $fileName, $pdf->output());
+
+        Recu::create([
+            'fichier_pdf' => 'documents/' . $fileName,
+            'date_emission' => now(),
+            'paiement_id' => $paiement->id,
+        ]);
+
+        // Envoi du mail du reçu
+        try {
+            Mail::to($user->email)->send(new RecuPaiementMail($paiement, $user, 'documents/' . $fileName));
+        } catch (Exception $e) {
+            Log::error('Erreur envoi email paiement espèces', [
+                'user_id' => $user->id,
+                'error' => $e->getMessage()
+            ]);
+        }
+
+        // --- Générer l'attestation si c'est un paiement d'inscription ---
+        if ($typePaiement === 'Inscription') {
+            $attestationPdf = Pdf::loadView('pages.admin.attestation.pdf.attestation', [
+                'user' => $user,
+                'inscription' => $inscription,
+            ]);
+
+            $attestationFileName = 'attestation_inscription_'.$inscription->id.'.pdf';
+            Storage::put('public/documents/'.$attestationFileName, $attestationPdf->output());
+
+            try {
+                Mail::to($user->email)->send(new AttestationInscriptionMail(
+                    $user,
+                    $inscription,
+                    'documents/'.$attestationFileName
+                ));
+            } catch (Exception $e) {
+                Log::error('Erreur envoi attestation inscription espèces', [
+                    'user_id' => $user->id,
+                    'error' => $e->getMessage()
+                ]);
+            }
+        }
+
+        return back()->with('success', "Paiement $typePaiement effectué avec succès. Reçu envoyé par email.");
     }
 
+    public function index(Request $request)
+    {
+        $perPage = $request->get('per_page', 10);
+
+        // Récupérer les filtres
+        $classeId = $request->get('classe_id');
+        $anneeAcademique = $request->get('annee_accademique');
+        $nomPrenom = $request->get('nom_prenom');
+
+        $paiements = Paiement::query()
+            ->with(['inscription.classe.formation', 'inscription.programmeAccademique', 'inscription.user']);
+
+        // Filtrer par classe
+        if ($classeId) {
+            $paiements->whereHas('inscription.classe', function($q) use ($classeId) {
+                $q->where('id', $classeId);
+            });
+        }
+
+        // Filtrer par année académique
+        if ($anneeAcademique) {
+            $paiements->whereHas('inscription.programmeAccademique', function($q) use ($anneeAcademique) {
+                $q->where('annee_accademique', $anneeAcademique);
+            });
+        }
+
+        // Filtrer par nom/prénom
+        if ($nomPrenom) {
+            $paiements->whereHas('inscription.user', function($q) use ($nomPrenom) {
+                $q->where('nom', 'like', "%$nomPrenom%")
+                ->orWhere('prenom', 'like', "%$nomPrenom%");
+            });
+        }
+
+        $paiements = $paiements->orderBy('date', 'desc')->paginate($perPage);
+
+        $classes = \App\Models\Classe::all();
+        $annees = \App\Models\ProgrammeAccademique::pluck('annee_accademique');
+
+        return view('pages.admin.paiement.liste', compact('paiements', 'classes', 'annees'));
+    }
 
         /**
      * Store a newly created resource in storage.

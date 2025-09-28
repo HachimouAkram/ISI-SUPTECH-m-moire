@@ -40,7 +40,7 @@
             <!-- Recent Sales End -->
 
             <!-- Widgets Start -->
-            @include('sections.admin.widget')
+            <!--include('sections.admin.widget')-->
             <!-- Widgets End -->
 
             <!-- Footer Start -->

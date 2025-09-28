@@ -110,6 +110,19 @@
                                 @enderror
                             </div>
 
+                            <!-- Fonction -->
+                            <div class="mb-3">
+                                <select id="fonction" name="fonction" required class="form-select @error('fonction') is-invalid @enderror">
+                                    <option value="" disabled {{ old('fonction') ? '' : 'selected' }}>Fonction</option>
+                                    <option value="Directeur" {{ old('fonction') == 'Directeur' ? 'selected' : '' }}>Directeur</option>
+                                    <option value="Secretaire" {{ old('fonction') == 'Secretaire' ? 'selected' : '' }}>Secrétaire</option>
+                                    <option value="Tresorier" {{ old('fonction') == 'Tresorier' ? 'selected' : '' }}>Trésorier</option>
+                                </select>
+                                @error('fonction')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
                             <button type="submit" class="btn btn-primary py-3 w-100 mb-4">Créer Admin</button>
 
                         </form>

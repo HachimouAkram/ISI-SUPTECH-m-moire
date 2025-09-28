@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Traits\GenerateApiResponse;
 use App\Models\User;
+use App\Models\Formation;
+use App\Models\Inscription;
+use App\Models\ProgrammeAccademique;
 use Illuminate\Support\Facades\Hash;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -14,17 +18,34 @@ class UserController extends Controller
 
     public function index()
     {
-        // Récupération dynamique du nombre par page (valeur par défaut = 10)
+        /** @var User $user */
         $perPage = request()->get('per_page', 10);
+        $search = request()->get('search');
 
-        // Séparer les utilisateurs par rôle
-        $etudiants = User::where('role', 'etudiant')->paginate($perPage, ['*'], 'etudiants_page');
+        $etudiantsQuery = User::where('role', 'etudiant');
+
+        if ($search) {
+            $etudiantsQuery->where(function($query) use ($search) {
+                $query->where('nom', 'like', "%{$search}%")
+                    ->orWhere('prenom', 'like', "%{$search}%");
+            });
+        }
+
+        $etudiants = $etudiantsQuery->paginate($perPage, ['*'], 'etudiants_page');
+
         $admins = User::where('role', 'admin')->paginate($perPage, ['*'], 'admins_page');
-        return view('pages.admin.user.liste', compact('etudiants', 'admins'));
-        //$perPage = request()->get('per_page', 10); // valeur par défaut : 10
-        //$users = User::paginate($perPage);
-        //return view('pages.admin.user.liste', compact('users'));
+        $formations = Formation::all();
+        $programmeActif = ProgrammeAccademique::where('etat', '1')->first();
+        $inscriptionsEnCours = Inscription::where('statut', 'Encours')
+            ->whereIn('user_id', $etudiants->pluck('id'))
+            ->get()
+            ->groupBy('user_id');
+
+        return view('pages.admin.user.liste', compact('etudiants', 'admins', 'formations', 'programmeActif', 'inscriptionsEnCours'));
+
+
     }
+
 
     public function store(Request $request)
     {
@@ -33,7 +54,7 @@ class UserController extends Controller
             $user->nom = $request->nom;
             $user->prenom = $request->prenom;
             $user->email = $request->email;
-            $user->password = Hash::make($request->password); // ✅ champ corrigé
+            $user->password = Hash::make($request->password);
             $user->role = $request->role;
             $user->telephone = $request->telephone;
             $user->sexe = $request->sexe;
@@ -45,6 +66,39 @@ class UserController extends Controller
             return $this->errorResponse('Insertion échouée', 500, $e->getMessage());
         }
     }
+
+    public function storeEtudiant(Request $request)
+    {
+        $validated = $request->validate([
+            'nom' => 'required|string|max:100',
+            'prenom' => 'required|string|max:100',
+            'email' => 'required|email|unique:users,email',
+            'telephone' => 'required|string|max:20',
+            'sexe' => 'required|in:Homme,Femme,Autre',
+            'date_naissance' => 'required|date',
+            'password' => 'required|string|min:6',
+        ]);
+
+        $validated['password'] = bcrypt($validated['password']); // Hash mot de passe
+        $validated['role'] = 'etudiant';
+        $validated['fonction'] = null;
+
+        $user = User::create($validated); // ⚠️ assigner à $user
+
+        // 🔹 Log
+        activity()
+            ->causedBy(Auth::user())  // admin connecté ou étudiant lui-même
+            ->performedOn($user)
+            ->withProperties([
+                'role' => $user->role,
+                'email' => $user->email,
+            ])
+            ->log("Étudiant ajouté");
+
+        return redirect()->route('users.index')->with('success', '✅ Étudiant ajouté avec succès.');
+
+    }
+
 
     public function update(Request $request, $id)
     {
@@ -64,6 +118,16 @@ class UserController extends Controller
             $user->date_naissance = $request->date_naissance;
             $user->save();
 
+            activity()
+                ->causedBy(Auth::user())
+                ->performedOn($user)
+                ->withProperties([
+                    'role' => $user->role,
+                    'email' => $user->email,
+                ])
+                ->log("Utilisateur modifié");
+
+
             return $this->successResponse($user, 'Mise à jour réussie');
         } catch (Exception $e) {
             return $this->errorResponse('Mise à jour échouée', 500, $e->getMessage());
@@ -75,6 +139,16 @@ class UserController extends Controller
         try {
             $user = User::findOrFail($id);
             $user->delete();
+
+            activity()
+                ->causedBy(Auth::user())
+                ->performedOn($user)
+                ->withProperties([
+                    'role' => $user->role,
+                    'email' => $user->email,
+                ])
+                ->log("Utilisateur supprimé");
+
             return $this->successResponse($user, 'Suppression réussie');
         } catch (Exception $e) {
             return $this->errorResponse('Suppression échouée', 500, $e->getMessage());

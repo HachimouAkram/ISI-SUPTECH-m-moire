@@ -12,9 +12,6 @@
             <a href="{{ url('/apropo') }}" class="nav-item nav-link {{ request()->is('about') ? 'active' : '' }}">À propos</a>
             <a href="{{ url('/cours') }}" class="nav-item nav-link {{ request()->is('courses') ? 'active' : '' }}">Formation</a>
             <a href="{{ url('/contact') }}" class="nav-item nav-link {{ request()->is('contact') ? 'active' : '' }}">Contactez-Nous</a>
-        </div>
-
-        <div class="d-none d-lg-flex">
             <a href="{{route('login')}}" class="btn btn-outline-primary py-4 px-5">
                 Se connecter
             </a>

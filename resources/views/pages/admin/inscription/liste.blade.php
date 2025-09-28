@@ -27,7 +27,6 @@
                         <div class="bg-secondary rounded h-100 p-4">
                             <div class="d-flex justify-content-between align-items-center mb-4">
                                 <h6 class="mb-4">Liste des inscriptions - {{ ucfirst($statut) }}</h6>
-                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">➕ Ajouter</button>
                             </div>
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <div>

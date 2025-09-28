@@ -6,12 +6,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, LogsActivity, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -19,9 +23,9 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'nom', 'prenom', 'email', 'password', 'role',
+        'etat', 'nom', 'prenom', 'email', 'password', 'role', 'role_id',
         'telephone', 'sexe', 'date_naissance', 'must_change_password',
-        'email_verification_code', 'is_verified','photo',
+        'email_verification_code', 'is_verified','photo','fonction',
     ];
 
     public function inscriptions()
@@ -33,6 +37,29 @@ class User extends Authenticatable
     {
         return $this->hasOne(Rappel::class);
     }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    // Configurer les options de logs
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['nom', 'prenom', 'email', 'role'])
+            ->useLogName('user')
+            ->logOnlyDirty()
+            ->setDescriptionForEvent(function(string $eventName){
+                $actor = Auth::user()?->name ?? 'Système';
+                return match($eventName) {
+                    'created' => "Utilisateur ajouté par $actor",
+                    'updated' => "Utilisateur modifié par $actor",
+                    'deleted' => "Utilisateur supprimé par $actor",
+                };
+            });
+    }
+
 
     /**
      * The attributes that should be hidden for serialization.

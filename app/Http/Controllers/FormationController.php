@@ -68,7 +68,7 @@ class FormationController extends Controller
             $formation->domaine = $request->domaine;
             $formation->save();
             return redirect()->route('formations.index')->with('success', 'Mise à jour réussie');
-            
+
         } catch (Exception $e) {
             return $this->errorResponse('Mise à jour échouée', 500, $e->getMessage());
         }
@@ -138,12 +138,9 @@ class FormationController extends Controller
     }
 
     public function showTestForm()
-{
-    $formations = \App\Models\Formation::all();
-    return view('pages.admin.inscription.test', compact('formations'));
-}
-
-
-
+    {
+        $formations = \App\Models\Formation::all();
+        return view('pages.admin.inscription.test', compact('formations'));
+    }
 
 }

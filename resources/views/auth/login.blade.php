@@ -54,7 +54,8 @@
                             </div>
 
                             <!-- Password -->
-                            <div class="form-floating mb-4">
+                            <!-- Password -->
+                            <div class="form-floating mb-4 position-relative">
                                 <input type="password"
                                     class="form-control @error('password') is-invalid @enderror"
                                     id="floatingPassword"
@@ -63,6 +64,12 @@
                                     autocomplete="current-password"
                                     placeholder="Mot de passe">
                                 <label for="floatingPassword">Mot de passe</label>
+
+                                <!-- Bouton œil -->
+                                <span class="position-absolute top-50 end-0 translate-middle-y me-3" style="cursor: pointer;" onclick="togglePassword()">
+                                    <i class="fas fa-eye" id="togglePasswordIcon"></i>
+                                </span>
+
                                 @error('password')
                                     <span class="invalid-feedback d-block" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -101,5 +108,19 @@
     @include('sections.admin.script')
     <!-- Template Javascript -->
 </body>
-
+<script>
+function togglePassword() {
+    const passwordInput = document.getElementById('floatingPassword');
+    const icon = document.getElementById('togglePasswordIcon');
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+</script>
 </html>

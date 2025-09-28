@@ -59,40 +59,54 @@
 
                         <div class="d-flex justify-content-end mt-3">
 
-                            @if(!$inscriptionEnCours)
-                            <!-- Bouton Suivant + formulaire (comme dans ton code) -->
-                            <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#etapeFormation">
-                                <i class="bi bi-arrow-right-circle"></i> Suivant
-                            </button>
+                            @if($inscriptionEnCours)
+                                <div class="alert mt-4" style="background-color: #191C24; color: #fcfcfa;">
+                                    <h5 class="fw-bold" style="color: #dec106;">⚠️ Inscription en cours détectée</h5>
+                                    <p>
+                                        Vous avez déjà une inscription en cours. Merci de patienter jusqu'à ce que votre inscription soit validée ou refusée avant d’en faire une nouvelle.
+                                    </p>
+                                    <p>
+                                        Toute inscription validée implique le paiement intégral des frais pour l'année scolaire concernée afin de pouvoir effectuer une nouvelle inscription.
+                                        <br><br>
+                                        Si vous souhaitez annuler votre inscription en cours, veuillez contacter l'administration avant que celle-ci ne soit considérée comme engagée.
+                                        <br><br>
+                                        Passé un délai d’un mois après le début de la formation sans paiement, l'inscription sera automatiquement considérée comme une dette. Dans ce cas, vous serez redevable des frais d’inscription ainsi que d’un premier mois de mensualité.
+                                        <br><br>
+                                        Au-delà de ce délai, les mensualités dues augmenteront en fonction du nombre de mois écoulés.
+                                        <br><br>
+                                        L’accès à l’établissement sera strictement réservé aux étudiants à jour dans leurs paiements. De plus, aucune nouvelle inscription ne pourra être effectuée tant que les frais antérieurs ne seront pas régularisés.
+                                    </p>
+                                </div>
+                            @elseif($resteAPayer > 0)
+                                <div class="alert mt-4" style="background-color: #191C24; color: #fcfcfa;">
+                                    <h5 class="fw-bold" style="color: #dec106;">⚠️ Dettes détectées</h5>
+                                    <p>
+                                        Vous devez encore <strong>{{ number_format($resteAPayer, 0, ',', ' ') }} FCFA</strong>
+                                        sur votre dernière inscription validée.<br>
+                                        Veuillez régulariser votre situation avant de procéder à une nouvelle inscription.
+                                        <br><br>
+                                        Toute inscription validée implique le paiement intégral des frais pour l'année scolaire concernée afin de pouvoir effectuer une nouvelle inscription.
+                                        <br><br>
+                                        Si vous souhaitez annuler votre inscription en cours, veuillez contacter l'administration.
+                                        <br><br>
+                                    </p>
+                                </div>
+                            @else
+                                <!-- Bouton Suivant + formulaire -->
+                                <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#etapeFormation">
+                                    <i class="bi bi-arrow-right-circle"></i> Suivant
+                                </button>
 
-                            <div class="collapse mt-5" id="etapeFormation">
-
-                                <form action="{{ route('inscriptions.store') }}" method="POST">
-                                    @csrf
-                                    <!-- Champs du formulaire ici -->
-                                </form>
-                            </div>
-                        @else
-                            <div class="alert mt-4" style="background-color: #191C24; color: #fcfcfa;">
-                                <h5 class="fw-bold" style="color: #dec106;">⚠️ Inscription en cours détectée</h5>
-                                <p>
-                                    Vous avez déjà une inscription en cours. Merci de patienter jusqu'à ce que votre inscription soit validée ou refusée avant d’en faire une nouvelle.
-                                </p>
-                                <p>
-                                    Toute inscription validée implique le paiement intégral des frais pour l'année scolaire concernée afin de pouvoir effectuer une nouvelle inscription.
-                                    <br><br>
-                                    Si vous souhaitez annuler votre inscription en cours, veuillez contacter l'administration avant que celle-ci ne soit considérée comme engagée.
-                                    <br><br>
-                                    Passé un délai d’un mois après le début de la formation sans paiement, l'inscription sera automatiquement considérée comme une dette. Dans ce cas, vous serez redevable des frais d’inscription ainsi que d’un premier mois de mensualité.
-                                    <br><br>
-                                    Au-delà de ce délai, les mensualités dues augmenteront en fonction du nombre de mois écoulés.
-                                    <br><br>
-                                    L’accès à l’établissement sera strictement réservé aux étudiants à jour dans leurs paiements. De plus, aucune nouvelle inscription ne pourra être effectuée tant que les frais antérieurs ne seront pas régularisés.
-                                </p>
-                            </div>
-                        @endif
+                                <div class="collapse mt-5" id="etapeFormation">
+                                    <form action="{{ route('inscriptions.store') }}" method="POST">
+                                        @csrf
+                                        <!-- Champs du formulaire ici -->
+                                    </form>
+                                </div>
+                            @endif
 
                         </div>
+
 
                         <!-- Étape 3 : Choix de formation et classe -->
                         <div class="collapse mt-5" id="etapeFormation">
@@ -133,7 +147,7 @@
 
                                 <div class="d-flex justify-content-end">
                                     <button type="submit" class="btn btn-success">
-                                        <i class="bi bi-check-circle"></i> Valider la deman
+                                        <i class="bi bi-check-circle"></i> Valider la demande
                                     </button>
                                 </div>
                             </form>

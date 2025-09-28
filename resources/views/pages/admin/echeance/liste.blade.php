@@ -27,12 +27,17 @@
                         <div class="bg-secondary rounded h-100 p-4">
                             <div class="d-flex justify-content-between align-items-center mb-4">
                                 <div class="alert alert-warning text-center">
-                                    💰 Montant total restant à payer : <strong>{{ number_format($montant_restant, 0, ',', ' ') }} FCFA</strong>
+                                    💰 Montant total restant à payer :
+                                    <strong>{{ number_format($montant_restant, 0, ',', ' ') }} FCFA</strong>
                                 </div>
-                                <a href="{{ route('paiement.choix') }}" class="btn btn-success btn-sm shadow-sm d-flex align-items-center justify-content-center" style="gap: 5px;">
-                                    <i class="fa fa-credit-card"></i> Payer
-                                </a>
 
+                                @if (!empty($mois_echeances) && $montant_restant > 0)
+                                    <a href="{{ route('paiement.choix') }}"
+                                    class="btn btn-success btn-sm shadow-sm d-flex align-items-center justify-content-center"
+                                    style="gap: 5px;">
+                                        <i class="fa fa-credit-card"></i> Payer
+                                    </a>
+                                @endif
                             </div>
                             @if(isset($message))
                                 <div class="alert alert-info">{{ $message }}</div>

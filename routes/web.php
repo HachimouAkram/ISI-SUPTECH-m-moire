@@ -13,8 +13,14 @@ use App\Http\Controllers\RappelController;
 use App\Http\Controllers\RecuController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ListeClasseController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProgrammeAcademiqueController;
+use App\Http\Controllers\ProgrammeAccademiqueController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\RolePermissionController;
+use App\Http\Controllers\UserRoleController;
 use App\Http\Controllers\VerificationController;
 use App\Models\Formation;
 
@@ -22,16 +28,51 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::prefix('roles')->group(function () {
+    Route::get('/', [RoleController::class, 'index'])->name('roles.index');
+    Route::post('/store', [RoleController::class, 'store'])->name('roles.store');
+    Route::put('/update/{id}', [RoleController::class, 'update'])->name('roles.update');
+    Route::delete('/destroy/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
 
+    // Permissions
+    Route::get('/{id}/permissions', [RoleController::class, 'editPermissions'])->name('roles.permissions.edit');
+    Route::put('/{id}/permissions', [RoleController::class, 'updatePermissions'])->name('roles.permissions.update');
+});
 
-Route::get('/programme-academique/create', [ProgrammeAcademiqueController::class, 'create'])->name('programme_academique.create');
-Route::post('/programme-academique/store', [ProgrammeAcademiqueController::class, 'store'])->name('programme_academique.store');
+Route::prefix('user-roles')->group(function () {
+    Route::get('/', [UserRoleController::class, 'index'])->name('user_roles.index');
+    Route::get('/{id}/edit', [UserRoleController::class, 'edit'])->name('user_roles.edit');
+    Route::put('/{id}', [UserRoleController::class, 'update'])->name('user_roles.update');
+});
+
+Route::prefix('role-permissions')->group(function () {
+    Route::get('/', [RolePermissionController::class, 'index'])->name('role_permissions.index');
+    Route::get('/{id}/edit', [RolePermissionController::class, 'edit'])->name('role_permissions.edit');
+    Route::put('/{id}', [RolePermissionController::class, 'update'])->name('role_permissions.update');
+});
+
+Route::prefix('permissions')->group(function () {
+    Route::get('/', [PermissionController::class, 'index'])->name('permissions.index');
+    Route::get('/create', [PermissionController::class, 'create'])->name('permissions.create');
+    Route::post('/store', [PermissionController::class, 'store'])->name('permissions.store');
+    Route::get('/{id}/edit', [PermissionController::class, 'edit'])->name('permissions.edit');
+    Route::put('/{id}', [PermissionController::class, 'update'])->name('permissions.update');
+    Route::delete('/{id}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/programme-academique', [ProgrammeAcademiqueController::class, 'index'])->name('programme.index');
+    Route::get('/programme-academique/create', [ProgrammeAcademiqueController::class, 'create'])->name('programme.create');
+    Route::post('/programme-academique/store', [ProgrammeAcademiqueController::class, 'store'])->name('programme.store');
+    Route::get('/programme-academique/edit/{id}', [ProgrammeAcademiqueController::class, 'edit'])->name('programme.edit');
+    Route::put('/programme-academique/update/{id}', [ProgrammeAcademiqueController::class, 'update'])->name('programme.update');
+    Route::get('/programme-academique/toggle/{id}', [ProgrammeAcademiqueController::class, 'toggleEtat'])->name('programme.toggle');
+});
 
 // Vérification du code
 Route::get('/verify-code', [VerificationController::class, 'show'])->name('verify.code');
 Route::post('/verify-code', [VerificationController::class, 'verify']);
 Route::post('/resend-code', [VerificationController::class, 'resend'])->name('resend.code');
-
 
 // Afficher le formulaire de changement de mot de passe
 Route::get('/password/change-notice', [PasswordController::class, 'notice'])
@@ -44,6 +85,9 @@ Route::post('/password/change', [PasswordController::class, 'update'])
 // Créer un admin
 Route::get('/admin/create', [AdminController::class, 'create'])->name('admin.create');
 Route::post('/admin/store', [AdminController::class, 'store'])->name('admin.store');
+Route::get('/admin/utilisateurs', [AdminController::class, 'indexAdmin'])->name('admins.index');
+Route::get('/parametre', [AdminController::class, 'parametre'])->name('parametre.index');
+
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
@@ -75,6 +119,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/mes-documents/modifier', [DocumentController::class, 'editMesDocuments'])->name('mes.documents.edit');
     Route::post('/mes-documents/{document}', [DocumentController::class, 'updateMesDocument'])->name('mes.documents.update');
 });
+
 Route::get('/documents/{document}/edit', [DocumentController::class, 'edit'])->name('documents.edit');
 Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
 Route::put('/documents/{document}', [DocumentController::class, 'update'])->name('documents.update');
@@ -115,15 +160,20 @@ Route::get('/api/formations/{id}/classes', function ($id) {
         ->orderBy('niveau')
         ->get();
 });
+Route::post('/inscriptions/store-by-admin', [InscriptionController::class, 'storeByAdmin'])
+    ->name('inscription.store.by.admin')
+    ->middleware(['auth']); // Tu peux ajouter un middleware de rôle (ex: isSecretaire)
+
 Route::get('/test-form', [FormationController::class, 'showTestForm']);
 
 // Route paiement
 // Strip
-Route::get('/paiement/stripe/{type}', [PaiementController::class, 'createStripePaiement'])->name('stripe.create');
-Route::get('/paiement/stripe/success/{type}', [PaiementController::class, 'stripeSuccess'])->name('stripe.success');
+
+Route::get('/paiement/stripe/{type}', [PaiementController::class, 'createStripePaiement'])->middleware(['auth', 'verified'])->name('stripe.create');
+Route::get('/paiement/stripe/success/{type}', [PaiementController::class, 'stripeSuccess'])->middleware(['auth', 'verified'])->name('stripe.success');
 Route::get('/paiement/stripe/cancel', [PaiementController::class, 'stripeCancel'])->name('stripe.cancel');
 //Choix
-Route::get('/paiement/choix', [PaiementController::class, 'choixType'])->name('paiement.choix');
+Route::get('/paiement/choix', [PaiementController::class, 'choixType'])->middleware(['auth', 'verified'])->name('paiement.choix');
 Route::get('/paiement/{type}', [PaiementController::class, 'afficherPaiement'])->name('paiement.page');
 // Routes PayPal
 Route::middleware(['auth'])->group(function () {
@@ -135,6 +185,12 @@ Route::middleware(['auth'])->group(function () {
     //Route::get('/paiement/cancel', [PaiementController::class, 'paypalCancel'])->name('paiement.cancel');
     //Route::post('/paypal/capture', [PaiementController::class, 'captureOrder'])->name('paypal.order.capture');
 
+});
+//paiment espece
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin/paiement/espece/{user}', [PaiementController::class, 'formPaiementEspece'])->name('paiement.espece.form');
+    Route::post('/paiement/espece/{user}', [PaiementController::class, 'payerEspeceUnique'])
+    ->name('paiement.espece.store');
 });
 
 //Normal
@@ -176,10 +232,36 @@ Route::put('/users/{user}', [UserController::class, 'update'])->name('users.upda
 Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 Route::get('/users/{user}', [UserController::class, 'show'])->where('id', '[0-9]+')->name('users.show');
 Route::get('/users/getformdetails', [UserController::class, 'getformdetails'])->name('users.getformdetails');
+Route::post('/users/etudiants', [UserController::class, 'storeEtudiant'])->name('users.store.etudiant');
+
 
 //Npotification
 Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
 Route::get('/notifications/{id}', [NotificationController::class, 'show'])->name('notifications.show');
+
+// routes/web.php
+
+Route::middleware(['auth'])->group(function () {
+
+    // Page index : liste des classes
+    Route::get('/listes', [ListeClasseController::class, 'index'])
+        ->name('listes.index');
+
+    // Afficher la liste des étudiants par classe et programme
+    Route::get('/listes/{classe}/{programme}', [ListeClasseController::class, 'show'])
+        ->name('listes.show');
+
+    // Export PDF
+    Route::get('/listes/{classe}/{programme}/pdf', [ListeClasseController::class, 'exportPdf'])
+        ->name('listes.exportPdf');
+
+    // Export Excel
+    Route::get('/listes/{classe}/{programme}/excel', [ListeClasseController::class, 'exportExcel'])
+        ->name('listes.exportExcel');
+
+});
+
+
 require __DIR__.'/auth.php';
 
 // Vitrine

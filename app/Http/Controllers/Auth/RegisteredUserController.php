@@ -53,6 +53,9 @@ class RegisteredUserController extends Controller
             'email_verification_code' => rand(100000, 999999),
         ]);
 
+        // ✅ Affectation du rôle Spatie
+        $user->assignRole('Etudiant');
+
         // Envoyer le mail
         Mail::to($user->email)->send(new VerificationCodeMail($user->email_verification_code));
 

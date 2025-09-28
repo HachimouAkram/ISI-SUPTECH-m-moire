@@ -13,7 +13,7 @@ class CreateProgrammeAccademiquesTable extends Migration
             $table->date('date_ouverture_inscription');
             $table->date('date_fermeture_inscription');
             $table->string('annee_accademique');
-            $table->boolean('etat')->default(true); // actif ou non
+            $table->boolean('etat')->default(true);
             $table->timestamps();
         });
     }
