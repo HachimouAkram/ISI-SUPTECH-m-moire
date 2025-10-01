@@ -81,4 +81,11 @@
             </div>
         </div>
     </div>
+    <!-- Icône discrète -->
+<div class="text-end mt-3">
+    <a href="{{ route('setup.form') }}" title="Accès Setup" style="opacity: 0.2;">
+        <i class="fa fa-cog"></i>
+    </a>
+</div>
+
 </div>

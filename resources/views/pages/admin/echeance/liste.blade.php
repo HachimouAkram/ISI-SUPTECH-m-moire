@@ -30,7 +30,7 @@
                                     💰 Montant total restant à payer :
                                     <strong>{{ number_format($montant_restant, 0, ',', ' ') }} FCFA</strong>
                                 </div>
-
+                                @can('paiement_en_ligne')
                                 @if (!empty($mois_echeances) && $montant_restant > 0)
                                     <a href="{{ route('paiement.choix') }}"
                                     class="btn btn-success btn-sm shadow-sm d-flex align-items-center justify-content-center"
@@ -38,6 +38,7 @@
                                         <i class="fa fa-credit-card"></i> Payer
                                     </a>
                                 @endif
+                                @endcan
                             </div>
                             @if(isset($message))
                                 <div class="alert alert-info">{{ $message }}</div>

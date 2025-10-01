@@ -53,14 +53,16 @@
                                                         <a href="{{ route('listes.show', [$classe->id, $programme->id]) }}" class="btn btn-primary btn-sm">
                                                             Voir la liste
                                                         </a>
-
+                                                        @can('exporter_liste_classe_etudiant_pdf')
                                                         <a href="{{ route('listes.exportPdf', [$classe->id, $programme->id]) }}" class="btn btn-danger btn-sm">
                                                             PDF
                                                         </a>
-
+                                                        @endcan
+                                                        @can('exporter_liste_classe_etudiant_excel')
                                                         <a href="{{ route('listes.exportExcel', [$classe->id, $programme->id]) }}" class="btn btn-success btn-sm">
                                                             Excel
                                                         </a>
+                                                        @endcan
                                                     </td>
                                                 </tr>
                                             @endforeach

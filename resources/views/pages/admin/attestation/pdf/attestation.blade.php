@@ -218,17 +218,17 @@
 
         .branches {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-around; /* Ou space-evenly */
+            align-items: flex-start;
             margin: 15px 0;
             font-size: 9px;
             text-align: center;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
         }
 
         .branch {
             flex: 1;
-            padding: 0 3px;
-            min-width: 120px;
+            padding: 0 5px;
         }
 
         .address-line {
@@ -256,8 +256,7 @@
         <div class="header">
             <div class="header-top">
                 <div class="isi-logo">
-                    <div class="isi">ISI</div>
-                    <div class="suptech">SUPTECH</div>
+                    <img src="{{ public_path('images/logo_isi.jpeg') }}" alt="Logo ISI" style="height: 60px;">
                 </div>
 
                 <div class="institut-title">
@@ -290,7 +289,18 @@
             </div>
 
             <div class="student-info">
-                Atteste que Monsieur/Madame <span class="student-name">{{ strtoupper($user->nom) }} {{ ucwords($user->prenom) }}</span>, né(e) le <strong>{{ $user->date_naissance ? Carbon\Carbon::parse($user->date_naissance)->format('d/m/Y') : '___/___/____' }}</strong> à <strong>{{ $user->lieu_naissance ?? '_________________' }}</strong>, est étudiant(e) dans notre Institut pour l'année
+                Atteste que
+                @if($user->civilite === 'M')
+                    Monsieur
+                @elseif($user->civilite === 'Mme')
+                    Madame
+                @else
+                    Monsieur/Madame
+                @endif
+                <span class="student-name">{{ strtoupper($user->nom) }} {{ ucwords($user->prenom) }}</span>,
+                né(e) le <strong>{{ $user->date_naissance ? Carbon\Carbon::parse($user->date_naissance)->format('d/m/Y') : '___/___/____' }}</strong>
+                à <strong>{{ $user->lieu_naissance ?? '_________________' }}</strong>,
+                est étudiant(e) dans notre Institut pour l'année
             </div>
 
             <div class="academic-year">
@@ -300,7 +310,12 @@
 
         <!-- Section filière -->
         <div class="filiere-section">
-            <span class="filiere-label">FILIÈRE</span><span class="filiere-name">: {{ $inscription->classe->formation->nom }}@if($inscription->classe->formation->type_formation) - {{ $inscription->classe->formation->type_formation }}@endif</span>
+            <span class="filiere-label">FILIÈRE</span>
+            <span class="filiere-name">: {{ $inscription->classe->formation->nom }}
+            @if($inscription->classe->formation->type_formation)
+                - {{ $inscription->classe->formation->type_formation }}
+            @endif
+            </span>
         </div>
 
         <!-- Clause de validité -->
@@ -316,18 +331,17 @@
 
             <div class="director-signature">
                 <div class="director-title">Le Directeur des Études</div>
-                <div class="director-name">{{ config('app.director_name', 'Bouye M. Kara SAMB') }}</div>
+                <div class="director-name">{{ config('app.director_name', 'Serigne M. Kara SAMB') }}</div>
                 <div class="seal">
-                    SCEAU DE<br>
-                    L'INSTITUT
+                    <!-- Sceau de l'institut -->
                 </div>
             </div>
         </div>
 
-        <!-- Pied de page -->
+       <!-- Pied de page -->
         <div class="footer">
             <div class="contact-line">
-                TÉL: (+221) 33 825 62 10 - FOR: (+221) 77 978 26 18- Site Web:www.suptech.sn-E-mail:suptech@suptech.sn.info
+                TEL: (+221) 33 825 62 10 - POR: (+221) 77 978 26 18 - Site Web: www.suptech.sn - E-mail: suptech@suptech.info
             </div>
 
             <div class="branches">

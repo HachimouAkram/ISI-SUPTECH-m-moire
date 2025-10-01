@@ -22,9 +22,11 @@
                     <div class="bg-secondary rounded h-100 p-4">
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <h6 class="mb-0"><i class="fas fa-user-shield me-2"></i>Liste des Administrateurs</h6>
+                            @can('creer_admins')
                             <a href="{{ route('admin.create') }}">
                                 <button class="btn btn-sm btn-primary" herf><i class=""></i> ➕ Ajouter</button>
                             </a>
+                            @endcan
                         </div>
 
                         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -68,6 +70,7 @@
                                         </tr>
 
                                         <!-- Modal Voir Profil -->
+                                        @can('voir_profil_admin')
                                         <div class="modal fade" id="viewModal{{ $admin->id }}" tabindex="-1" aria-hidden="true">
                                             <div class="modal-dialog modal-lg">
                                                 <div class="modal-content bg-dark text-white">
@@ -79,16 +82,12 @@
                                                         <dl class="row">
                                                             <dt class="col-sm-4">Nom complet</dt>
                                                             <dd class="col-sm-8">{{ $admin->nom }} {{ $admin->prenom }}</dd>
-
                                                             <dt class="col-sm-4">Email</dt>
                                                             <dd class="col-sm-8">{{ $admin->email }}</dd>
-
                                                             <dt class="col-sm-4">Téléphone</dt>
                                                             <dd class="col-sm-8">{{ $admin->telephone ?? 'Non renseigné' }}</dd>
-
                                                             <dt class="col-sm-4">Date de naissance</dt>
                                                             <dd class="col-sm-8">{{ $admin->date_naissance ?? 'Non renseignée' }}</dd>
-
                                                             <dt class="col-sm-4">Fonction</dt>
                                                             <dd class="col-sm-8">{{ $admin->fonction ?? 'Non renseignée' }}</dd>
                                                         </dl>
@@ -99,6 +98,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @endcan
                                     @empty
                                         <tr>
                                             <td colspan="5" class="text-center text-muted">Aucun administrateur trouvé</td>

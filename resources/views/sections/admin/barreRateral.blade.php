@@ -2,7 +2,7 @@
 <div class="sidebar pe-4 pb-3">
     <nav class="navbar bg-secondary navbar-dark">
         <a href="{{ route('dashboard') }}" class="navbar-brand mx-4 mb-3 text-center">
-            <div style="line-height: 0.8;"> <!-- diminue l'espace vertical -->
+            <div style="line-height: 0.8;">
                 <span style="font-size: 36px; font-weight: bold; color: #1d3c78; letter-spacing: 1px; font-family: 'Georgia', serif; text-shadow: 1px 1px 2px rgba(0,0,0,0.2);">
                     I S I
                 </span><br>

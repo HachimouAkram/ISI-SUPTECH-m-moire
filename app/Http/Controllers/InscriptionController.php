@@ -9,13 +9,16 @@ use Illuminate\Http\Request;
 use App\Traits\GenerateApiResponse;
 use App\Models\Inscription;
 use App\Models\ProgrammeAccademique;
+use App\Models\User;
 use App\Notifications\InscriptionRefusee;
 use App\Notifications\InscriptionValidee;
+use App\Notifications\NouvelleDemandeInscriptionNotification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 use Exception;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 
 class InscriptionController extends Controller
 {
@@ -144,8 +147,12 @@ class InscriptionController extends Controller
             $inscription->user_id = Auth::id();
             $inscription->save();
 
+            // Envoyer notification à tous les secrétaires et directeur
+            $destinataires = User::whereIn('fonction', ['secretaire', 'directeur'])->get();
+            Notification::send($destinataires, new NouvelleDemandeInscriptionNotification($inscription));
+
             return redirect()->route('inscription.confirmation')
-                ->with('success', 'Inscription enregistrée avec succès.');
+                ->with('success', 'Votre demande d’inscription a été envoyée avec succès.');
         } catch (Exception $e) {
             return $this->errorResponse('Erreur lors de l\'enregistrement', 500, $e->getMessage());
         }

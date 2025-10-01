@@ -34,7 +34,7 @@
                         <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modalDetails{{ $inscription->id }}" title="Voir">
                             <i class="bi bi-eye"></i>
                         </button>
-                        @if(Auth::user()->fonction === 'Secretaire' || Auth::user()->fonction === 'Directeur')
+                        @can('valider_inscription')
                             <!-- Bouton Valider -->
                             <form action="{{ route('inscriptions.valider', $inscription->id) }}" method="POST" class="d-inline">
                                 @csrf
@@ -43,12 +43,13 @@
                                     <i class="bi bi-check-circle"></i>
                                 </button>
                             </form>
-                            <!-- Bouton Refuser -->
-                            <button type="button" class="btn btn-sm btn-danger" title="Refuser" data-bs-toggle="modal" data-bs-target="#refuserModal{{ $inscription->id }}">
-                                <i class="bi bi-x-circle"></i>
-                            </button>
-                        @endif
+                        @endcan
+                        <!-- Bouton Refuser -->
+                        <button type="button" class="btn btn-sm btn-danger" title="Refuser" data-bs-toggle="modal" data-bs-target="#refuserModal{{ $inscription->id }}">
+                            <i class="bi bi-x-circle"></i>
+                        </button>
                         <!-- Modale -->
+                        @can('refuser_inscription')
                         <div class="modal fade" id="refuserModal{{ $inscription->id }}" tabindex="-1" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content bg-dark text-white"> <!-- 🔹 Fond noir + texte blanc -->
@@ -78,7 +79,7 @@
                                 </div>
                             </div>
                         </div>
-
+                        @endcan
                     </td>
                 </tr>
             @endforeach
@@ -92,6 +93,7 @@
 </div>
 
 <!-- Modals en dehors de la table -->
+@can('voir_detail_inscription')
 @foreach($inscriptions as $inscription)
     <div class="modal fade" id="modalDetails{{ $inscription->id }}" tabindex="-1" aria-labelledby="modalLabel{{ $inscription->id }}" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -152,3 +154,4 @@
         </div>
     </div>
 @endforeach
+@endcan

@@ -39,14 +39,13 @@
             @endforeach
         </tbody>
     </table>
-
     <!-- Pagination -->
     <div class="d-flex justify-content-center mt-3">
         {{ $inscriptions->links('pagination::bootstrap-5') }}
     </div>
 </div>
-
 <!-- Modals en dehors de la table -->
+@can('voir_detail_inscription')
 @foreach($inscriptions as $inscription)
     <div class="modal fade" id="modalDetails{{ $inscription->id }}" tabindex="-1" aria-labelledby="modalLabel{{ $inscription->id }}" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -102,3 +101,4 @@
         </div>
     </div>
 @endforeach
+@endcan

@@ -100,7 +100,7 @@
                                                     <i class="bi bi-pencil-square"></i>
                                                 </button>
                                                 @endcan
-
+                                                @can('supprimer_classes')
                                                 <form method="POST" action="{{ route('classes.destroy', $classe) }}">
                                                     @csrf
                                                     @method('DELETE')
@@ -110,11 +110,13 @@
                                                         <i class="bi bi-trash3"></i>
                                                     </button>
                                                 </form>
+                                                @endcan
                                             </td>
                                         @endif
                                     </tr>
 
                                     <!-- Modal Modifier -->
+                                    @can('modifier_classes')
                                     <div class="modal fade" id="editModal{{ $classe->id }}" tabindex="-1" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <form method="POST" action="{{ route('classes.update', $classe) }}">
@@ -133,6 +135,7 @@
                                             </form>
                                         </div>
                                     </div>
+                                    @endcan
                                 @endforeach
                                 </tbody>
                             </table>
@@ -147,6 +150,7 @@
         </div>
 
         <!-- Modal Ajouter -->
+        @can('creer_classes')
         <div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <form method="POST" action="{{ route('classes.store') }}">
@@ -163,6 +167,7 @@
                 </form>
             </div>
         </div>
+        @endcan
 
         @include('sections.admin.footer')
     </div>

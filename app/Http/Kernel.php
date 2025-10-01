@@ -4,6 +4,8 @@ namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Spatie\Permission\Middlewares\PermissionMiddleware;
+use Spatie\Permission\Middleware\RoleMiddleware;
+
 
 
 class Kernel extends HttpKernel
@@ -36,6 +38,6 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         'auth' => \App\Http\Middleware\Authenticate::class,
         'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
-        // autres middlewares personnalisés...
+        'setup.access' => \App\Http\Middleware\SetupAccess::class,
     ];
 }

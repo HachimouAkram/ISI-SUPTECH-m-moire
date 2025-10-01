@@ -47,5 +47,13 @@ return [
         'key' => env('STRIPE_KEY'),
     ],
 
-    
+    'orange' => [
+        'env' => env('ORANGE_MONEY_ENV', 'sandbox'),
+        'base_url' => env('ORANGE_MONEY_BASE_URL'),
+        'api_key' => env('ORANGE_MONEY_API_KEY'),
+        'secret_key' => env('ORANGE_MONEY_SECRET_KEY'),
+        'merchant_id' => env('ORANGE_MONEY_MERCHANT_ID'),
+    ],
+
+
 ];

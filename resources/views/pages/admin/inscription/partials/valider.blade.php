@@ -48,6 +48,7 @@
 </div>
 
 <!-- Modals en dehors de la table -->
+@can('voir_detail_inscription')
 @foreach($inscriptions as $inscription)
     <div class="modal fade" id="modalDetails{{ $inscription->id }}" tabindex="-1" aria-labelledby="modalLabel{{ $inscription->id }}" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -103,3 +104,4 @@
         </div>
     </div>
 @endforeach
+@endcan

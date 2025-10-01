@@ -88,19 +88,22 @@
                                                                 <i class="bi bi-pencil-square"></i>
                                                             </button>
                                                             <!-- Bouton Supprimer -->
-                                                            <form method="POST" action="{{ route('formations.destroy', $formation) }}">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button class="btn btn-sm btn-outline-danger"
-                                                                        onclick="return confirm('Supprimer cette formation ?')"
-                                                                        title="Supprimer">
-                                                                    <i class="bi bi-trash3"></i>
-                                                                </button>
-                                                            </form>
+                                                            @can('supprimer_formations')
+                                                                <form method="POST" action="{{ route('formations.destroy', $formation) }}">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button class="btn btn-sm btn-outline-danger"
+                                                                            onclick="return confirm('Supprimer cette formation ?')"
+                                                                            title="Supprimer">
+                                                                        <i class="bi bi-trash3"></i>
+                                                                    </button>
+                                                                </form>
+                                                            @endcan
                                                         </td>
                                                     @endif
                                                 </tr>
                                                 <!-- Modal Modifier -->
+                                                @can('modifier_formations')
                                                 <div class="modal fade" id="editModal{{ $formation->id }}" tabindex="-1" aria-hidden="true">
                                                     <div class="modal-dialog">
                                                         <form method="POST" action="{{ route('formations.update', $formation) }}">
@@ -122,6 +125,7 @@
                                                         </form>
                                                     </div>
                                                 </div>
+                                                @endcan
                                             @endforeach
                                         </tbody>
 
@@ -137,6 +141,7 @@
                 </div>
 
                 <!-- Modal Ajouter -->
+                @can('creer_formations')
                 <div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog">
                         <form method="POST" action="{{ route('formations.store') }}">
@@ -157,6 +162,7 @@
                         </form>
                     </div>
                 </div>
+                @endcan
 
                 @include('sections.admin.footer')
             </div>

@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     @include('sections.admin.head')
 </head>
-
 <body>
     <div class="container-fluid position-relative d-flex p-0">
         <!-- Spinner -->
@@ -13,13 +11,10 @@
                 <span class="sr-only">Chargement...</span>
             </div>
         </div>
-
         @include('sections.admin.barreRateral')
-
         <!-- Content Start -->
         <div class="content">
             @include('sections.admin.navbar')
-
             <div class="container-fluid p-5 text-center">
                 <div class="card bg-secondary shadow-lg">
                     <div class="card-body">
@@ -29,8 +24,6 @@
                             Toutefois, toute inscription restée incomplète pendant plus de <strong>5 jours</strong> sera automatiquement <strong>refusée</strong>.
                             Merci de votre compréhension.
                         </p>
-
-
                         <div class="mt-4">
                             <a href="{{ route('dashboard') }}" class="btn btn-primary me-2">
                                 <i class="bi bi-house-door"></i> Aller au dashboard
@@ -44,14 +37,11 @@
                     </div>
                 </div>
             </div>
-
             @include('sections.admin.footer')
         </div>
         <!-- Content End -->
-
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
-
     @include('sections.admin.script')
 </body>
 </html>

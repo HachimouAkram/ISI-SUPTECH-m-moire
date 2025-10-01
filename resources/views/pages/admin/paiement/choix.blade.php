@@ -26,34 +26,37 @@
                         </h3>
 
                         <div class="row g-4">
-                        @if(!$inscriptionPayee)
-                            <!-- Boutons pour payer l'inscription -->
-                            <div class="col-md-6 offset-md-3">
-                                <a href="{{ route('paiement.page', ['type' => 'Inscription']) }}"
-                                class="btn btn-success w-100 py-3 mb-2">
-                                    💳 Payer votre Inscription avec PayPal
-                                </a>
-                                <a href="{{ route('stripe.create', ['type' => 'Inscription']) }}"
-                                class="btn btn-primary w-100 py-3">
-                                    💳 Payer votre Inscription Avec Strip
-                                </a>
-                            </div>
-                        @else
-                            <!-- Boutons pour payer la mensualité -->
-                            <div class="col-md-6 offset-md-3">
-                                <a href="{{ route('paiement.page', ['type' => 'Mensualité']) }}"
-                                class="btn btn-success w-100 py-3 mb-2">
-                                    💳 Payer vos Mensualités avec PayPal
-                                </a>
-                                <a href="{{ route('stripe.create', ['type' => 'Mensualité']) }}"
-                                class="btn btn-primary w-100 py-3">
-                                    💳 Payer vos Mensualité avec Stripe
-                                </a>
-                            </div>
-                        @endif
+                            @if(!$inscriptionPayee)
+                                <!-- Boutons pour payer l'inscription -->
+                                <div class="col-md-6 offset-md-3">
+                                    <a href="{{ route('paiement.page', ['type' => 'Inscription']) }}"
+                                        class="btn btn-success w-100 py-3 mb-2">
+                                        💳 Payer votre Inscription avec PayPal
+                                    </a>
+                                    <a href="{{ route('stripe.create', ['type' => 'Inscription']) }}"
+                                        class="btn btn-primary w-100 py-3 mb-2">
+                                        💳 Payer votre Inscription avec Stripe
+                                    </a>
+                                    <a href="{{ route('orange.create.form', ['type' => 'Inscription']) }}"
+                                    class="btn btn-warning w-100 py-3 mb-2">💳 Payer Inscription avec Orange Money</a>
+                                </div>
+                            @else
+                                <!-- Boutons pour payer la mensualité -->
+                                <div class="col-md-6 offset-md-3">
+                                    <a href="{{ route('paiement.page', ['type' => 'Mensualité']) }}"
+                                        class="btn btn-success w-100 py-3 mb-2">
+                                        💳 Payer vos Mensualités avec PayPal
+                                    </a>
+                                    <a href="{{ route('stripe.create', ['type' => 'Mensualité']) }}"
+                                        class="btn btn-primary w-100 py-3 mb-2">
+                                        💳 Payer vos Mensualités avec Stripe
+                                    </a>
+                                    <a href="{{ route('orange.create.form', ['type' => 'Mensualité']) }}"
+                                    class="btn btn-warning w-100 py-3 mb-2">💳 Payer Mensualité avec Orange Money</a>
+                                </div>
+                            @endif
+                        </div>
                     </div>
-
-
                     </div>
                 </div>
             </div>

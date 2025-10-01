@@ -15,6 +15,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ListeClasseController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PaiementOrangeController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProgrammeAcademiqueController;
 use App\Http\Controllers\ProgrammeAccademiqueController;
@@ -83,11 +84,14 @@ Route::post('/password/change', [PasswordController::class, 'update'])
      ->name('password.change');
 
 // Créer un admin
+// Page de saisie du code secret
+Route::get('/setup', [AdminController::class, 'setup'])->name('setup.form');
+Route::post('/setup/check', [AdminController::class, 'checkSetup'])->name('setup.check');
 Route::get('/admin/create', [AdminController::class, 'create'])->name('admin.create');
+
 Route::post('/admin/store', [AdminController::class, 'store'])->name('admin.store');
 Route::get('/admin/utilisateurs', [AdminController::class, 'indexAdmin'])->name('admins.index');
 Route::get('/parametre', [AdminController::class, 'parametre'])->name('parametre.index');
-
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
@@ -99,11 +103,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
-
-
 // Routes pour le contrôleur ClasseController
-Route::get('/classes', [ClasseController::class, 'index'])->name('classes.index');
+Route::get('/classes', [ClasseController::class, 'index'])->middleware('role:Directeur')->name('classes.index');
 Route::post('/classes', [ClasseController::class, 'store'])->name('classes.store');
 Route::put('/classes/{classe}', [ClasseController::class, 'update'])->name('classes.update');
 Route::delete('/classes/{classe}', [ClasseController::class, 'destroy'])->name('classes.destroy');
@@ -167,8 +168,13 @@ Route::post('/inscriptions/store-by-admin', [InscriptionController::class, 'stor
 Route::get('/test-form', [FormationController::class, 'showTestForm']);
 
 // Route paiement
-// Strip
+Route::get('/paiement/orange/{type}', [PaiementOrangeController::class,'showOrangeForm'])->name('orange.create.form');
+Route::post('/paiement/orange/{type}', [PaiementOrangeController::class,'createPayment'])->name('orange.create');
 
+// endpoint public pour les callbacks (POST)
+Route::post('/paiement/orange/callback', [PaiementOrangeController::class,'callback'])->name('orange.callback');
+
+// Strip
 Route::get('/paiement/stripe/{type}', [PaiementController::class, 'createStripePaiement'])->middleware(['auth', 'verified'])->name('stripe.create');
 Route::get('/paiement/stripe/success/{type}', [PaiementController::class, 'stripeSuccess'])->middleware(['auth', 'verified'])->name('stripe.success');
 Route::get('/paiement/stripe/cancel', [PaiementController::class, 'stripeCancel'])->name('stripe.cancel');
@@ -258,6 +264,10 @@ Route::middleware(['auth'])->group(function () {
     // Export Excel
     Route::get('/listes/{classe}/{programme}/excel', [ListeClasseController::class, 'exportExcel'])
         ->name('listes.exportExcel');
+    // Export excel de tous les etudiant de l annee
+    Route::get('/listes/{programmeId}/export-excel-programme', [ListeClasseController::class, 'exportExcelProgramme'])
+    ->name('listes.exportExcelProgramme');
+
 
 });
 

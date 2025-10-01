@@ -33,11 +33,39 @@ class AdminController extends Controller
         return view('pages.admin.parametre.liste', compact('role'));
         // le fichier Blade que tu as créé
     }
-    // Affiche le formulaire
-    public function create()
+
+
+    // Affiche le formulaire de code secret
+    public function setup()
     {
-        return view('admin.create-user'); // le fichier Blade que tu as créé
+        return view('setup.code'); // page avec champ pour le code
     }
+
+    // Vérifie le code secret
+    public function checkSetup(Request $request)
+    {
+        $request->validate([
+            'code' => 'required|string',
+        ]);
+
+        if ($request->code === env('SETUP_CODE')) {
+            session(['setup_validated' => true]);
+            return redirect()->route('admin.create');
+        }
+
+        return back()->withErrors(['code' => 'Code secret invalide']);
+    }
+
+    // Page création admin
+    public function create(Request $request)
+    {
+        if (!session('setup_validated')) {
+            return redirect()->route('setup.form')->with('error', 'Accès refusé');
+        }
+
+        return view('admin.create-user');
+    }
+
 
 
     // Enregistre le nouvel administrateur

@@ -30,18 +30,24 @@ class PermissionSeeder extends Seeder
             'creer_etudiants',
             'modifier_etudiants',
             'supprimer_etudiants',
+            'voir_profil_etudiant',
 
             // Administrateurs
             'voir_admins',
             'creer_admins',
             'modifier_admins',
             'supprimer_admins',
+            'voir_profil_admin',
 
             // Paiement
             'voir_paiements',
             'creer_paiements',
-            'modifier_paiements',
-            'supprimer_paiements',
+            'paiement_en_ligne',
+            'paiement_espece',
+
+            // Liste
+            'exporter_liste_classe_etudiant_pdf',
+            'exporter_liste_classe_etudiant_excel',
 
             // Échéance
             'voir_echeances',
@@ -76,6 +82,10 @@ class PermissionSeeder extends Seeder
             'modifier_inscriptions',
             'supprimer_inscriptions',
             'voir_mes_inscriptions',
+            'valider_inscription',
+            'refuser_inscription',
+            'voir_detail_inscription',
+            'inscriver_etudiant_formation',
         ];
 
         foreach ($permissions as $name) {

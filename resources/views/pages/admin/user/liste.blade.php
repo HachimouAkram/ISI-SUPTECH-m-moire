@@ -98,8 +98,8 @@
                                             @endif
                                         </td>
                                     </tr>
-
                                     <!-- Modal Ajouter Étudiant -->
+                                    @can('creer_etudiants')
                                     <div class="modal fade" id="addEtudiantModal" tabindex="-1" aria-hidden="true">
                                         <div class="modal-dialog modal-lg">
                                             <div class="modal-content bg-dark text-white">
@@ -112,28 +112,23 @@
                                                     <input type="hidden" name="role" value="etudiant">
                                                     <input type="hidden" name="password" value="passer123">
                                                     <input type="hidden" name="must_change_password" value="1">
-
                                                     <div class="modal-body">
                                                         <div class="mb-3">
                                                             <label for="nom" class="form-label">Nom</label>
                                                             <input type="text" name="nom" id="nom" class="form-control" required>
                                                         </div>
-
                                                         <div class="mb-3">
                                                             <label for="prenom" class="form-label">Prénom</label>
                                                             <input type="text" name="prenom" id="prenom" class="form-control" required>
                                                         </div>
-
                                                         <div class="mb-3">
                                                             <label for="email" class="form-label">Email</label>
                                                             <input type="email" name="email" id="email" class="form-control" required>
                                                         </div>
-
                                                         <div class="mb-3">
                                                             <label for="telephone" class="form-label">Téléphone</label>
                                                             <input type="text" name="telephone" id="telephone" class="form-control" required>
                                                         </div>
-
                                                         <div class="mb-3">
                                                             <label for="sexe" class="form-label">Sexe</label>
                                                             <select name="sexe" id="sexe" class="form-select" required>
@@ -143,13 +138,11 @@
                                                                 <option value="Autre">Autre</option>
                                                             </select>
                                                         </div>
-
                                                         <div class="mb-3">
                                                             <label for="date_naissance" class="form-label">Date de naissance</label>
                                                             <input type="date" name="date_naissance" id="date_naissance" class="form-control" required>
                                                         </div>
                                                     </div>
-
                                                     <div class="modal-footer">
                                                         <button type="submit" class="btn btn-success">
                                                             <i class="bi bi-check-circle"></i> Enregistrer
@@ -160,8 +153,9 @@
                                             </div>
                                         </div>
                                     </div>
-
+                                    @endcan
                                     <!-- Modal Voir Profil -->
+                                    @can('voir_profil_etudiant')
                                     <div class="modal fade" id="viewModal{{ $user->id }}" tabindex="-1" aria-hidden="true">
                                         <div class="modal-dialog modal-lg">
                                             <div class="modal-content bg-dark text-white">
@@ -196,8 +190,9 @@
                                             </div>
                                         </div>
                                     </div>
-
+                                    @endcan
                                     <!-- Modal Paiement -->
+                                    @can('paiement_espece')
                                     <div class="modal fade" id="paiementModal{{ $user->id }}" tabindex="-1" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content bg-dark text-white">
@@ -247,8 +242,9 @@
                                             </div>
                                         </div>
                                     </div>
-
+                                    @endcan
                                     <!-- Modal Inscription -->
+                                    @can('inscriver_etudiant_formation')
                                     <div class="modal fade" id="inscriptionModal{{ $user->id }}" tabindex="-1" aria-hidden="true">
                                         <div class="modal-dialog modal-lg">
                                             <div class="modal-content bg-dark text-white">
@@ -311,11 +307,10 @@
                                             </div>
                                         </div>
                                     </div>
-
+                                    @endcan
                                     @endforeach
                                 </tbody>
                             </table>
-
                             <div class="mt-3">
                                 {{ $etudiants->links('pagination::bootstrap-5') }}
                             </div>
